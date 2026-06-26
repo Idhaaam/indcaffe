@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dashboard - IndCaffe</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="../js/api.js"></script>
+    <script>checkAuth();</script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#3E2723",
+                        "surface": "#fcf9f8",
+                        "background": "#FFF8E1",
+                        "primary": "#271310",
+                        "brand-green": { 400: "#66BB6A", 500: "#4CAF50", 900: "#1B5E20" },
+                        "brand-orange": { 100: "#FFE0B2", 500: "#FF9800", 900: "#E65100" }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-background text-[#1b1c1c] font-['Inter'] min-h-screen flex">
+    <!-- Sidebar -->
+    <nav class="bg-primary-container text-white font-semibold fixed left-0 top-0 h-full w-[240px] shadow-lg flex flex-col py-6 px-4 gap-4 z-20 hidden lg:flex overflow-y-auto">
+        <div class="flex items-center gap-3 px-2 mb-4">
+            <div class="h-10 w-10 bg-white rounded-full flex items-center justify-center p-1 text-primary-container"><span class="material-symbols-outlined">local_cafe</span></div>
+            <div>
+                <div class="text-lg font-bold font-['Outfit']">IndCaffe</div>
+                <div id="cafe-name-sidebar" class="text-[10px] text-gray-300">☕ Loading...</div>
+            </div>
+        </div>
+        <ul class="flex flex-col gap-1 w-full space-y-1 flex-1 text-sm">
+            <li><a class="bg-[#e6e0c9] text-[#676351] rounded-lg font-bold flex items-center gap-3 px-3 py-2" href="dashboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span> Dashboard</a></li>
+            <li><a class="opacity-80 hover:opacity-100 hover:bg-[#271310] transition-colors flex items-center gap-3 px-3 py-2 rounded-lg" href="products.html"><span class="material-symbols-outlined">inventory_2</span> Produk</a></li>
+            <li><a class="opacity-80 hover:opacity-100 hover:bg-[#271310] transition-colors flex items-center gap-3 px-3 py-2 rounded-lg" href="transactions.html"><span class="material-symbols-outlined">sync_alt</span> Transaksi Stok</a></li>
+            <li><a class="opacity-80 hover:opacity-100 hover:bg-[#271310] transition-colors flex items-center gap-3 px-3 py-2 rounded-lg" href="surplus.html"><span class="material-symbols-outlined">eco</span> Surplus Makanan</a></li>
+        </ul>
+        <div class="mt-auto">
+            <button onclick="api.logout()" class="text-red-300 opacity-80 hover:opacity-100 hover:bg-red-900/20 transition-colors flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left text-sm font-semibold">
+                <span class="material-symbols-outlined">logout</span> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 lg:ml-[240px] flex flex-col min-h-screen">
+        <header class="bg-surface text-primary text-sm docked top-0 w-full flex justify-between items-center px-6 h-[64px] sticky z-10 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="text-xl font-bold font-['Outfit'] hidden md:block">Dashboard Overview</div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="font-bold mr-2" id="user-greeting">Halo, User!</div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 md:p-6 flex flex-col gap-6">
+            <!-- ROW 1: Summary Cards -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white rounded-lg p-5 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-gray-500 text-xs font-semibold">Total Produk</div>
+                        <span class="material-symbols-outlined text-gray-400">inventory_2</span>
+                    </div>
+                    <div class="text-2xl font-bold font-['Outfit'] text-primary" id="total-products">...</div>
+                </div>
+                <div class="bg-white rounded-lg p-5 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-gray-500 text-xs font-semibold">Total Transaksi</div>
+                        <span class="material-symbols-outlined text-brand-green-500">sync_alt</span>
+                    </div>
+                    <div class="text-2xl font-bold font-['Outfit'] text-primary" id="total-tx">...</div>
+                </div>
+                <div class="bg-white rounded-lg p-5 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-gray-500 text-xs font-semibold">Surplus Dibagikan</div>
+                        <span class="material-symbols-outlined text-brand-green-500">eco</span>
+                    </div>
+                    <div class="text-2xl font-bold font-['Outfit'] text-primary" id="total-surplus">...</div>
+                </div>
+            </section>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="flex justify-center p-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green-500"></div>
+            </div>
+
+            <!-- Dashboard Content Container -->
+            <div id="dashboard-content" class="hidden">
+                <!-- Additional dashboard content can be rendered here -->
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 class="text-lg font-bold font-['Outfit'] text-primary mb-4">Aktivitas Terbaru</h3>
+                    <p class="text-sm text-gray-500">Pilih menu di sidebar untuk melihat produk dan transaksi Anda secara detail.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        async function loadDashboardData() {
+            const user = getUserInfo();
+            if (user) {
+                document.getElementById('user-greeting').textContent = `Halo, ${user.username}!`;
+                document.getElementById('cafe-name-sidebar').textContent = `☕ ${user.role === 'CAFE' ? 'Manajemen Cafe' : 'Mitra Donasi'}`;
+            }
+
+            // In real app, we would fetch products and transactions here.
+            // For now, we mock the stats assuming an empty database, but making a real API call.
+            try {
+                // If user is CAFE, we fetch their products to show stats.
+                const products = await api.get(`/master/products/cafe/${user.id}`); // Assuming cafeId = userId for now, or would need proper profile fetch
+                document.getElementById('total-products').textContent = products ? products.length : '0';
+                
+                const txs = await api.get(`/transactions/cafe/${user.id}`);
+                document.getElementById('total-tx').textContent = txs ? txs.length : '0';
+
+                const surplus = await api.get(`/transactions/surplus/cafe/${user.id}`);
+                document.getElementById('total-surplus').textContent = surplus ? surplus.length : '0';
+
+            } catch(e) {
+                console.error("Failed to load real data", e);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('hidden');
+            }
+        }
+        
+        loadDashboardData();
+    </script>
+</body>
+</html>

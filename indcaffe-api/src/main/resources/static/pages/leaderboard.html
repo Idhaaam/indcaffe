@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IndCaffe - Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Outfit:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-container": "#ae8d87",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ccc6b1",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary-fixed": "#94f990",
+                        "surface-container": "#f0eded",
+                        "outline-variant": "#d3c3c0",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-error-container": "#93000a",
+                        "secondary": "#625f4d",
+                        "primary-fixed": "#ffdad4",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-surface": "#313030",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#e3beb8",
+                        "on-tertiary-fixed": "#002204",
+                        "text-secondary": "#757575",
+                        "tertiary-fixed-dim": "#78dc77",
+                        "on-surface-variant": "#504442",
+                        "primary": "#271310",
+                        "surface-bright": "#fcf9f8",
+                        "on-secondary-container": "#676351",
+                        "on-surface": "#1c1b1b",
+                        "soft-red": "#EF5350",
+                        "on-primary-fixed-variant": "#5b403c",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#005313",
+                        "sky-blue": "#42A5F5",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#44a749",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf9f8",
+                        "primary-container": "#3e2723",
+                        "border-default": "#E0E0E0",
+                        "secondary-fixed": "#e9e2cc",
+                        "on-secondary-fixed": "#1e1c0e",
+                        "on-secondary-fixed-variant": "#4a4737",
+                        "warm-orange": "#FF9800",
+                        "surface-tint": "#745853",
+                        "outline": "#827472",
+                        "on-error": "#ffffff",
+                        "tertiary": "#001d03",
+                        "inverse-on-surface": "#f3f0ef",
+                        "inverse-primary": "#e3beb8",
+                        "secondary-container": "#e6e0c9",
+                        "decorative-green": "#E8F5E9",
+                        "on-primary-fixed": "#2b1613",
+                        "tertiary-container": "#003509",
+                        "on-background": "#1c1b1b",
+                        "surface-light": "#F5F5F5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "input-h": "1rem",
+                        "gutter": "1rem",
+                        "sidebar-width": "240px",
+                        "container-padding": "1.5rem",
+                        "input-v": "0.75rem",
+                        "section-gap": "3rem"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Outfit"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Outfit"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Outfit"],
+                        "hero-headline": ["Outfit"],
+                        "headline-sm": ["Outfit"],
+                        "headline-lg": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.25", "fontWeight": "600" }],
+                        "hero-headline": ["48px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.25", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .card-shadow {
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface shadow-sm docked full-width top-0 z-50">
+<div class="flex justify-between items-center px-container-padding h-header-height w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="#">IndCaffe</a>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-lg text-label-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 px-3 py-2 rounded-md active:scale-95 transition-transform" href="#">Home</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 px-3 py-2 rounded-md active:scale-95 transition-transform" href="#">Impact</a>
+<a class="font-label-lg text-label-lg text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 px-3 py-2 rounded-md active:scale-95 transition-transform" href="#">Leaderboard</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 px-3 py-2 rounded-md active:scale-95 transition-transform" href="#">Feed</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 px-3 py-2 rounded-md active:scale-95 transition-transform" href="#">Map</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-label-lg text-label-lg text-primary dark:text-primary-fixed-dim px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container rounded-md transition-colors duration-200 active:scale-95 transition-transform">Login</button>
+<button class="font-label-lg text-label-lg bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors duration-200 active:scale-95 transition-transform">Register</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-container-padding py-section-gap">
+<!-- Header & Filters -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg mb-2 text-primary">Sustainability Leaderboard</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Recognizing cafes making the biggest impact in food waste reduction.</p>
+</div>
+<div class="flex gap-4">
+<select class="bg-surface border border-outline-variant text-on-surface rounded-md px-4 py-2 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+<option>This Month</option>
+<option>Last Month</option>
+<option>This Year</option>
+<option>All Time</option>
+</select>
+<select class="bg-surface border border-outline-variant text-on-surface rounded-md px-4 py-2 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+<option>All Cities</option>
+<option>London</option>
+<option>Manchester</option>
+<option>Bristol</option>
+</select>
+</div>
+</div>
+<!-- Podium Section (Top 3) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 items-end">
+<!-- Silver (2nd) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow hover-lift flex flex-col items-center text-center order-2 md:order-1 h-[90%] relative glass-panel">
+<div class="absolute -top-4 bg-surface-variant text-on-surface-variant w-8 h-8 rounded-full flex items-center justify-center font-bold font-label-lg border-2 border-surface-container-lowest">2</div>
+<div class="w-24 h-24 rounded-full bg-surface-container mb-4 overflow-hidden border-4 border-[#C0C0C0]">
+<img class="w-full h-full object-cover" data-alt="A modern cafe storefront with a cozy, green aesthetic, light mode, soft daylight, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx5PW1tB12q2KZNGjAAPgjxOndBujee0V_aFwU4k7zjVqbAGbT23nQVNprnBCGcPMD_SxOmGpFEcGQG7mpx_zbODwgKONhmK13phcyoOs6NyDlnUF9rwGQ9uoE3xfYo6s52hsRa9yCHnn3W5KYFaAkBzt1dC4t6A_ww7aIIruB3fheUxTSwlIEL9Yw3Jbi4IE8kMAP_a_WZsG9mjkOSub1jQL-Ew1QgTEkXON1fxDvlDiiGMju6ml1Sw"/>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-1 text-primary">Green Bean Roasters</h3>
+<p class="font-body-md text-text-secondary mb-4">Manchester</p>
+<div class="bg-decorative-green text-on-tertiary-container px-3 py-1 rounded-full font-label-sm mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">eco</span>
+                    142 kg Saved
+                </div>
+<p class="font-label-sm text-text-secondary">92% Rescue Rate</p>
+</div>
+<!-- Gold (1st) -->
+<div class="bg-primary text-on-primary rounded-xl p-8 card-shadow hover-lift flex flex-col items-center text-center order-1 md:order-2 h-full relative z-10 border-2 border-[#FFD700]">
+<div class="absolute -top-5 bg-[#FFD700] text-primary w-10 h-10 rounded-full flex items-center justify-center font-bold font-headline-sm border-2 border-primary">1</div>
+<div class="w-32 h-32 rounded-full bg-surface-container mb-4 overflow-hidden border-4 border-[#FFD700] shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A bright, bustling artisan coffee shop interior with plants and natural wood, warm startup aesthetic, high-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-f5IM_rIcmzRgoFODys-0N9pUTNWiGoYgjWf15PN49q0nA_oB0mJmAPOLoj4ozffCOriSx4CwbgkTg4NfQLS9f2hW-QDlE3ZjYNibEwvhFFvs5bTJ0vKV5vHJw8L1wPphtf-fIvezdVBDE-OwyM8jE5EdkFlC1hgvN_RUYwy82i5zu6olMewg1JC96PDWX6sbOCgzbPF9_Bq5oMuCE-NlDiMH-ymLsZdO7ELOfEzGO67Q5tIugp3aXA"/>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1 text-[#FFD700]">The Daily Grind</h3>
+<p class="font-body-md text-primary-fixed-dim mb-4">London</p>
+<div class="bg-[#FFD700] text-primary px-4 py-1.5 rounded-full font-label-lg mb-3 flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[20px]">emoji_events</span>
+                    215 kg Saved
+                </div>
+<p class="font-body-md text-primary-fixed">98% Rescue Rate</p>
+</div>
+<!-- Bronze (3rd) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow hover-lift flex flex-col items-center text-center order-3 h-[85%] relative glass-panel">
+<div class="absolute -top-4 bg-[#CD7F32] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold font-label-lg border-2 border-surface-container-lowest">3</div>
+<div class="w-24 h-24 rounded-full bg-surface-container mb-4 overflow-hidden border-4 border-[#CD7F32]">
+<img class="w-full h-full object-cover" data-alt="A small neighborhood cafe with outdoor seating, sustainable vibe, sunny morning light, clean corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnipuEeEGN39OgWUO6nLhwHPC1KeIy8qLZVSl7ejLMU-TQRuMyx5TtT3H2MsRbAQr_0w6EYJMv6DHAKGnlQi_ZWj6q2ks1e4voXlukiMjZm1EDTTNLhidWhv1DUGTrWGi4LkTqf6OtXT0Mh8ZxpWIYNN8JtrBU-_xEc1ZbIoxXOPy63Sfnaf0WQlhPjgOOYU9v4YRFgiZpdmgWYml606LICVZV4bjwWBcuSK_51_XsufM_O-sPffjMYQ"/>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-1 text-primary">Urban Cup</h3>
+<p class="font-body-md text-text-secondary mb-4">Bristol</p>
+<div class="bg-decorative-green text-on-tertiary-container px-3 py-1 rounded-full font-label-sm mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">eco</span>
+                    110 kg Saved
+                </div>
+<p class="font-label-sm text-text-secondary">88% Rescue Rate</p>
+</div>
+</div>
+<!-- Full Ranking Table -->
+<div class="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg border-b border-outline-variant">
+<th class="p-4 pl-6 font-medium">Rank</th>
+<th class="p-4 font-medium">Cafe Name</th>
+<th class="p-4 font-medium">City</th>
+<th class="p-4 font-medium text-right">Saved (kg)</th>
+<th class="p-4 font-medium text-center">Rescue Rate</th>
+<th class="p-4 font-medium text-center">Waste Rate</th>
+<th class="p-4 pr-6 font-medium text-center">Badge</th>
+</tr>
+</thead>
+<tbody class="font-body-md">
+<tr class="border-b border-outline-variant hover:bg-surface-bright transition-colors">
+<td class="p-4 pl-6 font-bold text-on-surface">4</td>
+<td class="p-4 text-primary font-medium flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A simple cafe logo placeholder, abstract coffee bean shape, green and brown colors, flat design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT5A_OTf_4izPT-hcydoKdViGUID2-XzbEEYphn-ofq_38C1S_VJcUwtfXQVtCQSvLmuQoxTRDP0mP5lFIFm1uCauvbRS9x-EeuyRK62PT1Vvpa7SN1FdPmpw8fPGtN9TBSsU8YE1FK-Kju3MhOo2wKUuQ921_J6rW6VaQCOP8B3L9t2yXkbljewW5KjfAyQGknTYTlsrk-CPaGyhrRiLkaEPhUHQsXxkW4Ag9Jag7dYFnDbXDqviTiA"/>
+</div>
+                                Bean &amp; Leaf
+                            </td>
+<td class="p-4 text-text-secondary">London</td>
+<td class="p-4 text-right font-medium text-on-tertiary-container">95.2</td>
+<td class="p-4 text-center">
+<span class="inline-block bg-decorative-green text-on-tertiary-container px-2 py-1 rounded-md text-xs font-bold">85%</span>
+</td>
+<td class="p-4 text-center text-text-secondary">15%</td>
+<td class="p-4 pr-6 text-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-bright transition-colors">
+<td class="p-4 pl-6 font-bold text-on-surface">5</td>
+<td class="p-4 text-primary font-medium flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A simple cafe logo placeholder, abstract leaf shape, green colors, flat design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBUL-gYNKc102-tIt16EcMFaFLMqBfPBy50OIqdoSN6lV3UPp22QM_rVymmMXFgQMLngiHsYMU7gaYL0VkbGpwT0jyjupfS-98-u1-93dLis71fRkULyASRvGxDy7jATGqc07M7L6N6A2cFLjxnOCXsINYZWf-NVi90R72JHCKVCvbEY_mRa3NdYw1QaWP7S9tIYoZXFw1p-2QjUgDjRPLXhvzidauFxM4HkiRzgCloEuimFvW106z8g"/>
+</div>
+                                Morning Brew Co.
+                            </td>
+<td class="p-4 text-text-secondary">Manchester</td>
+<td class="p-4 text-right font-medium text-on-tertiary-container">88.7</td>
+<td class="p-4 text-center">
+<span class="inline-block bg-decorative-green text-on-tertiary-container px-2 py-1 rounded-md text-xs font-bold">82%</span>
+</td>
+<td class="p-4 text-center text-text-secondary">18%</td>
+<td class="p-4 pr-6 text-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4 pl-6 font-bold text-on-surface">6</td>
+<td class="p-4 text-primary font-medium flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A simple cafe logo placeholder, cup silhouette, minimalist design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4sTTXeEwnv55eOGp5cFTOKEqmIzZsZWU4MoOJNOvX360GwNTFihf8RAlf4hYe9O5Kww8jLTGhw0KCcunto84DF3-SpIF3qpBO7DFC2NSPzuzvKXZTdsUS4j83sllTMJ3T1D-v6KZlpPtKw_ncaL96EI3r8o4aD3mzeP0T5Np43j87wXwkf4Es3-XlIRTErhoV6ZzZe9U3R-B6KC8ABGCjE2ykObL88z4gjVObjtB90WXSpzL_ww3X0Q"/>
+</div>
+                                Earthy Espresso
+                            </td>
+<td class="p-4 text-text-secondary">Liverpool</td>
+<td class="p-4 text-right font-medium text-on-tertiary-container">76.4</td>
+<td class="p-4 text-center">
+<span class="inline-block bg-decorative-green text-on-tertiary-container px-2 py-1 rounded-md text-xs font-bold">79%</span>
+</td>
+<td class="p-4 text-center text-text-secondary">21%</td>
+<td class="p-4 pr-6 text-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">workspace_premium</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant flex justify-center">
+<button class="text-primary font-label-lg hover:underline">Load More</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant full-width bottom mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center py-section-gap px-container-padding w-full max-w-7xl mx-auto">
+<div class="mb-6 md:mb-0">
+<a class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary mb-2 block" href="#">IndCaffe</a>
+<p class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant">© 2024 IndCaffe. Transforming food waste into impact.</p>
+</div>
+<nav class="flex flex-wrap gap-6 justify-center md:justify-end">
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Sustainability Report</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Contact Us</a>
+</nav>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>IndCaffe - Register</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+    <script src="../js/api.js"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: "#271310", surface: "#fcf9f8" } } } }
+    </script>
+</head>
+<body class="bg-[#fcf9f8] text-[#1b1c1c] antialiased min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-semibold font-['Outfit'] text-primary mb-2" id="form-title">Daftar Akun Baru</h2>
+        <p class="text-sm text-gray-500 mb-6">Bergabung dengan platform IndCaffe untuk memberikan dampak positif.</p>
+
+        <div id="message" class="hidden mb-4 p-3 rounded-lg text-sm"></div>
+
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold mb-1">Username</label>
+                <input class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="username" required type="text"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">Password</label>
+                <input class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="password" required type="password"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1" id="name-label">Nama Institusi</label>
+                <input class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="name" required type="text"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">Kota</label>
+                <input class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="city" required type="text"/>
+            </div>
+            
+            <!-- Conditional Fields -->
+            <div id="cafe-fields" class="hidden">
+                <label class="block text-xs font-semibold mb-1">Alamat Lengkap</label>
+                <textarea class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="address"></textarea>
+            </div>
+            <div id="mitra-fields" class="hidden">
+                <label class="block text-xs font-semibold mb-1">Jenis Organisasi (Yayasan/Panti/dll)</label>
+                <input class="w-full px-4 py-2 rounded-lg border text-sm focus:ring-[#4CAF50] focus:border-[#4CAF50]" id="orgType" type="text"/>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-[#4CAF50] to-[#66BB6A] hover:shadow-md mt-4">
+                Daftar Sekarang
+            </button>
+        </form>
+        <div class="mt-6 text-center text-sm">
+            Sudah punya akun? <a href="login.html" class="text-[#4CAF50] font-semibold hover:underline">Masuk di sini</a>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || 'CAFE'; // Default CAFE
+
+        document.getElementById('form-title').innerText = type === 'CAFE' ? 'Daftar Sebagai Cafe' : 'Daftar Sebagai Mitra';
+        document.getElementById('name-label').innerText = type === 'CAFE' ? 'Nama Cafe' : 'Nama Organisasi';
+
+        if (type === 'CAFE') document.getElementById('cafe-fields').classList.remove('hidden');
+        if (type === 'MITRA') document.getElementById('mitra-fields').classList.remove('hidden');
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msgDiv = document.getElementById('message');
+            
+            btn.innerHTML = 'Loading...'; btn.disabled = true;
+            msgDiv.classList.add('hidden');
+
+            const payload = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                type: type,
+                name: document.getElementById('name').value,
+                city: document.getElementById('city').value,
+                address: document.getElementById('address')?.value || '',
+                organizationType: document.getElementById('orgType')?.value || ''
+            };
+
+            const result = await api.register(payload);
+            
+            if (result.success) {
+                msgDiv.className = 'mb-4 p-3 rounded-lg text-sm bg-green-100 text-green-700';
+                msgDiv.innerText = 'Pendaftaran berhasil! Silakan login.';
+                msgDiv.classList.remove('hidden');
+                setTimeout(() => window.location.href = 'login.html', 2000);
+            } else {
+                msgDiv.className = 'mb-4 p-3 rounded-lg text-sm bg-red-100 text-red-700';
+                msgDiv.innerText = result.error;
+                msgDiv.classList.remove('hidden');
+                btn.innerHTML = 'Daftar Sekarang'; btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IndCaffe - Impact</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f6f3f2",
+                      "on-primary-container": "#ae8d87",
+                      "on-secondary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#ccc6b1",
+                      "surface-dim": "#dcd9d9",
+                      "tertiary-fixed": "#94f990",
+                      "surface-container": "#f0eded",
+                      "outline-variant": "#d3c3c0",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-error-container": "#93000a",
+                      "secondary": "#625f4d",
+                      "primary-fixed": "#ffdad4",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#e5e2e1",
+                      "inverse-surface": "#313030",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#e3beb8",
+                      "on-tertiary-fixed": "#002204",
+                      "text-secondary": "#757575",
+                      "tertiary-fixed-dim": "#78dc77",
+                      "on-surface-variant": "#504442",
+                      "primary": "#271310",
+                      "surface-bright": "#fcf9f8",
+                      "on-secondary-container": "#676351",
+                      "on-surface": "#1c1b1b",
+                      "soft-red": "#EF5350",
+                      "on-primary-fixed-variant": "#5b403c",
+                      "background": "#fcf9f8",
+                      "on-tertiary-fixed-variant": "#005313",
+                      "sky-blue": "#42A5F5",
+                      "surface-container-high": "#eae7e7",
+                      "on-tertiary-container": "#44a749",
+                      "surface-container-lowest": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "surface": "#fcf9f8",
+                      "primary-container": "#3e2723",
+                      "border-default": "#E0E0E0",
+                      "secondary-fixed": "#e9e2cc",
+                      "on-secondary-fixed": "#1e1c0e",
+                      "on-secondary-fixed-variant": "#4a4737",
+                      "warm-orange": "#FF9800",
+                      "surface-tint": "#745853",
+                      "outline": "#827472",
+                      "on-error": "#ffffff",
+                      "tertiary": "#001d03",
+                      "inverse-on-surface": "#f3f0ef",
+                      "inverse-primary": "#e3beb8",
+                      "secondary-container": "#e6e0c9",
+                      "decorative-green": "#E8F5E9",
+                      "on-primary-fixed": "#2b1613",
+                      "tertiary-container": "#003509",
+                      "on-background": "#1c1b1b",
+                      "surface-light": "#F5F5F5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "header-height": "64px",
+                      "input-h": "1rem",
+                      "gutter": "1rem",
+                      "sidebar-width": "240px",
+                      "container-padding": "1.5rem",
+                      "input-v": "0.75rem",
+                      "section-gap": "3rem"
+              },
+              "fontFamily": {
+                      "label-lg": [
+                              "Outfit"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Outfit"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Outfit"
+                      ],
+                      "hero-headline": [
+                              "Outfit"
+                      ],
+                      "headline-sm": [
+                              "Outfit"
+                      ],
+                      "headline-lg": [
+                              "Outfit"
+                      ]
+              },
+              "fontSize": {
+                      "label-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "1.25",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "hero-headline": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.25",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .impact-card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        
+        /* Basic Line Chart CSS for visual representation without JS library */
+        .chart-container { position: relative; height: 250px; width: 100%; display: flex; align-items: flex-end; gap: 10px; padding-bottom: 20px; }
+        .chart-bar { background: linear-gradient(to top, var(--tw-colors-decorative-green), #81C784); width: 100%; border-radius: 4px 4px 0 0; position: relative; }
+        .chart-label { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--tw-colors-text-secondary); }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar -->
+<nav class="bg-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center px-container-padding h-header-height w-full max-w-7xl mx-auto">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-bold text-[32px]">coffee</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">IndCaffe</span>
+</div>
+<!-- Nav Links (Desktop) -->
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 py-2" href="#">Home</a>
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-primary pb-1" href="#">Impact</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 py-2" href="#">Leaderboard</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 py-2" href="#">Feed</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 py-2" href="#">Map</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="hidden md:block font-label-lg text-label-lg text-on-surface-variant hover:text-primary" href="#">Login</a>
+<a class="bg-primary text-on-primary font-label-lg text-label-lg px-6 py-2 rounded-full hover:scale-105 transition-transform active:scale-95" href="#">Register</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-container-padding py-section-gap space-y-section-gap">
+<!-- Hero Section -->
+<header class="text-center space-y-4 max-w-3xl mx-auto">
+<h1 class="font-hero-headline text-hero-headline text-primary">Dampak Nyata IndCaffe</h1>
+<p class="font-body-lg text-body-lg text-text-secondary">
+                Bersama-sama, kita mengubah sisa makanan menjadi tindakan nyata untuk lingkungan. Setiap gram berarti, setiap kafe berkontribusi.
+            </p>
+</header>
+<!-- Impact Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1: Food Saved -->
+<div class="bg-surface rounded-xl p-6 impact-card-shadow hover-lift border border-surface-container flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-tertiary-container">recycling</span>
+</div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-3 bg-decorative-green rounded-full text-tertiary-container">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Food Saved</span>
+</div>
+<div class="z-10 mt-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">2,350 <span class="text-headline-sm font-normal text-text-secondary">kg</span></h2>
+<p class="font-label-sm text-label-sm text-tertiary-container mt-1">+12% from last month</p>
+</div>
+</div>
+<!-- Card 2: CO2 Prevented -->
+<div class="bg-surface rounded-xl p-6 impact-card-shadow hover-lift border border-surface-container flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-primary-container">co2</span>
+</div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-3 bg-primary-fixed rounded-full text-on-primary-fixed">
+<span class="material-symbols-outlined" data-icon="air">air</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant">CO2 Prevented</span>
+</div>
+<div class="z-10 mt-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">5,875 <span class="text-headline-sm font-normal text-text-secondary">kg</span></h2>
+<p class="font-label-sm text-label-sm text-on-primary-fixed-variant mt-1">Equivalent to 250 trees planted</p>
+</div>
+</div>
+<!-- Card 3: Water Saved -->
+<div class="bg-surface rounded-xl p-6 impact-card-shadow hover-lift border border-surface-container flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-sky-blue">water_drop</span>
+</div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-3 bg-[#E3F2FD] rounded-full text-[#1565C0]">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Water Saved</span>
+</div>
+<div class="z-10 mt-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">2.35M <span class="text-headline-sm font-normal text-text-secondary">L</span></h2>
+<p class="font-label-sm text-label-sm text-text-secondary mt-1">Preserving natural resources</p>
+</div>
+</div>
+<!-- Card 4: Contributing Cafes -->
+<div class="bg-surface rounded-xl p-6 impact-card-shadow hover-lift border border-surface-container flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-warm-orange">storefront</span>
+</div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-3 bg-[#FFF3E0] rounded-full text-[#E65100]">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Active Cafes</span>
+</div>
+<div class="z-10 mt-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">48</h2>
+<p class="font-label-sm text-label-sm text-[#E65100] mt-1">Growing community</p>
+</div>
+</div>
+</section>
+<!-- Charts & Top Contributors Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Monthly Trend Chart -->
+<div class="lg:col-span-2 bg-surface rounded-xl p-6 impact-card-shadow border border-surface-container">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-primary">Food Saved Trend (kg)</h3>
+<select class="bg-surface-container border-none rounded-lg text-sm text-on-surface-variant py-2 pl-3 pr-8 focus:ring-1 focus:ring-primary">
+<option>Last 6 Months</option>
+<option>This Year</option>
+</select>
+</div>
+<!-- CSS-based Bar Chart Representation -->
+<div class="chart-container border-b border-surface-container-highest">
+<div class="chart-bar" style="height: 30%;"><span class="chart-label">Jan</span></div>
+<div class="chart-bar" style="height: 45%;"><span class="chart-label">Feb</span></div>
+<div class="chart-bar" style="height: 40%;"><span class="chart-label">Mar</span></div>
+<div class="chart-bar" style="height: 60%;"><span class="chart-label">Apr</span></div>
+<div class="chart-bar" style="height: 75%;"><span class="chart-label">May</span></div>
+<div class="chart-bar" style="height: 90%;"><span class="chart-label">Jun</span></div>
+</div>
+</div>
+<!-- Top Contributing Cafes -->
+<div class="bg-surface rounded-xl p-6 impact-card-shadow border border-surface-container">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-primary">Top Contributors</h3>
+</div>
+<ul class="space-y-4">
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A small circular logo of a modern cafe named 'Brew &amp; Bloom' featuring a minimalist leaf motif in muted greens on a clean white background, conveying an organic and sustainable brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8R86gjxbNBfm08ndV4oIhWfwbFlHKM2ReAocM07dDlgKDxJqZVWDJnrxk4OPZDvLBZOPPogKLPN24M4TaBGJWriuXEovhcQ16jdjQ6TxkffdILo8JwYCylB-HlsXlmOs5d-1s8xnDLU1G3sxdxVvW4T0WFSIRytYBvl-IFAdUwY_Dp0E4keu3L3Yeh49BgK7wFvgY0WcDMVJ_yVDCf86jsmJ4EzuNUMPuRuDeGSSDWsOBUeDC2cJz6g"/>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Brew &amp; Bloom</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Jakarta Selatan</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-label-lg text-tertiary-container">450 kg</p>
+</div>
+</li>
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A small circular logo of an artisanal coffee shop named 'Roast Republic' featuring a stylized coffee bean in deep brown hues on a clean background, conveying a premium and focused brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkF4ToZ02jjhFWqhQN5EXTmgsMSyWQBSOv4g_o23v-XY09UBvAeiJDyWs3V6q7UNOXx2I5B3RQLd87lWqskD0NCvD4TxFKhriGi3-ZWkNvPQm-Vf--bMa7y3Z91ZHKbXjkj8Dzyn0PjxLndL_9tves9q9cBpYE6g3xIFT2tRmEEViTD9MXhxXVIX8lbjA5n4-MdgU00AGP2qG2PkHYnhgRKFDpNAFjvsxJYFLtExVrMywd-FBQeILsCQ"/>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Roast Republic</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Bandung</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-label-lg text-tertiary-container">380 kg</p>
+</div>
+</li>
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A small circular logo of a cozy cafe named 'The Daily Grind' featuring a simple cup icon with steam lines in warm orange and brown tones, conveying a welcoming and everyday brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUSqbuGz9k2_1Z1zxwKyVMfRKRvraNhIPE2e0WAuD2L7-_ugXMY1QbqG_g_UdW9TQH7Y9nLlMosETM3CvgU8vxW4rwbEamEzxwexlQkteWPiem_fPsglJWXAMRn_Ol5_j4-bdQrKHyf0-7OLJYFbbWgEB0fW_fn41bRjOYOKXEI0DouThPmYg6fQsH70G-p1Oilop9h13n312RDc96CSohyWMvEDIWBBza1pUEwpQhYFIzIWb1AdWWUA"/>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">The Daily Grind</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Surabaya</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-label-lg text-tertiary-container">315 kg</p>
+</div>
+</li>
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A small circular logo of a modern bakery named 'Crumb &amp; Co' featuring a croissant outline in soft yellow and beige, conveying a fresh and artisanal brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxP0EFe7hcYcGHPSNx-D0mxFyRUu_L0I34Rv5bJlQ-OiuhUtw5-UVpbZfpFVdn7esZ4zUmDFO5q8SxjAdvC1GEAifwF4mfMAxng_oEt-6CDPIsbHr0IwaMc2T12ZU5HSJeud_XgcTVkilPMIiTmDkKCCwyYRhcZntoim6Q6OTsslbItO1pplN5gI_PVtXGRMeOJJuU6qcOX0-iHuuq1xROtAbgoBW3uFvU7XyqyZC00kz3Dbop63EF-Q"/>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Crumb &amp; Co.</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Bali</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-label-lg text-tertiary-container">290 kg</p>
+</div>
+</li>
+</ul>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center py-section-gap px-container-padding w-full max-w-7xl mx-auto">
+<div class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary mb-4 md:mb-0">
+                IndCaffe
+            </div>
+<div class="flex flex-wrap justify-center gap-6 mb-4 md:mb-0">
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Sustainability Report</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Contact Us</a>
+</div>
+<div class="font-body-md text-body-md text-text-secondary dark:text-on-surface-variant text-center md:text-right">
+                © 2024 IndCaffe. Transforming food waste into impact.
+            </div>
+</div>
+</footer>
+</body></html>

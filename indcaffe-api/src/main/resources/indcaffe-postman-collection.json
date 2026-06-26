@@ -1,0 +1,618 @@
+{
+  "info": {
+    "name": "IndCaffe API",
+    "description": "Panduan Testing API IndCaffe - First Time Setup hingga Alur Donasi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "FASE 1 - INISIALISASI SISTEM",
+      "item": [
+        {
+          "name": "1. Init Admin Pertama",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\",\n  \"namaLengkap\": \"Super Admin\",\n  \"email\": \"admin@indcaffe.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/init-admin",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "init-admin"]
+            }
+          }
+        },
+        {
+          "name": "2. Login ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"admin_token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 2 - ADMIN SETUP",
+      "item": [
+        {
+          "name": "3. Buat MANAGER",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"manager1\",\n  \"password\": \"Manager@123\",\n  \"role\": \"MANAGER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "4. Buat ADMIN_GUDANG",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"gudang1\",\n  \"password\": \"Gudang@123\",\n  \"role\": \"ADMIN_GUDANG\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "5. Lihat Semua User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "6. Cek Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/audit-logs",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "audit-logs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 3 - MASTER DATA",
+      "item": [
+        {
+          "name": "7. Buat Kategori",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Makanan Siap Saji\",\n  \"cafeId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/master/kategori",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "master", "kategori"]
+            }
+          }
+        },
+        {
+          "name": "8. Buat Supplier",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Supplier Ayam Geprek\",\n  \"contact\": \"0812345678\",\n  \"cafeId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/master/supplier",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "master", "supplier"]
+            }
+          }
+        },
+        {
+          "name": "9. Lihat Semua Kategori",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/master/kategori",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "master", "kategori"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 4 - REGISTER USER PUBLIK",
+      "item": [
+        {
+          "name": "10. Register CAFE",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cafe_jakarta\",\n  \"password\": \"Cafe@123\",\n  \"type\": \"CAFE\",\n  \"name\": \"Cafe Jakarta\",\n  \"city\": \"Jakarta\",\n  \"address\": \"Jl. Sudirman No 1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "11. Register MITRA",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mitra_panti\",\n  \"password\": \"Mitra@123\",\n  \"type\": \"MITRA\",\n  \"name\": \"Panti Asuhan Sejahtera\",\n  \"city\": \"Jakarta\",\n  \"organizationType\": \"Yayasan\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "12. Register PELANGGAN",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"pelanggan_budi\",\n  \"password\": \"Budi@123\",\n  \"type\": \"PELANGGAN\",\n  \"namaLengkap\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\",\n  \"noTelpon\": \"0899999999\",\n  \"address\": \"Jl. Mawar 2\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 5 - ADMIN GUDANG",
+      "item": [
+        {
+          "name": "13. Login ADMIN_GUDANG",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"gudang_token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"gudang1\",\n  \"password\": \"Gudang@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "14. Input Barang Masuk",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{gudang_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 100,\n  \"notes\": \"Restock mingguan\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/gudang/barang-masuk",
+              "host": ["{{base_url}}"],
+              "path": ["gudang", "barang-masuk"]
+            }
+          }
+        },
+        {
+          "name": "15. Lihat Stok Real-Time",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{gudang_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/gudang/stok",
+              "host": ["{{base_url}}"],
+              "path": ["gudang", "stok"]
+            }
+          }
+        },
+        {
+          "name": "16. Cek Expiry Alert",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{gudang_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/gudang/expiry-alert",
+              "host": ["{{base_url}}"],
+              "path": ["gudang", "expiry-alert"]
+            }
+          }
+        },
+        {
+          "name": "17. Tandai Siap Donasi",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{gudang_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 20,\n  \"pickupTime\": \"2026-06-30T10:00:00\",\n  \"notes\": \"Bisa segera diambil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/gudang/produk/1/siap-donasi",
+              "host": ["{{base_url}}"],
+              "path": ["gudang", "produk", "1", "siap-donasi"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 6 - MANAGER",
+      "item": [
+        {
+          "name": "18. Login MANAGER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"manager_token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"manager1\",\n  \"password\": \"Manager@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "19. Dashboard Laporan",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/manager/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["manager", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "20. Cek Stock Alerts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/manager/notifications/stock-alerts",
+              "host": ["{{base_url}}"],
+              "path": ["manager", "notifications", "stock-alerts"]
+            }
+          }
+        },
+        {
+          "name": "21. Laporan Stok",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/manager/reports/stock",
+              "host": ["{{base_url}}"],
+              "path": ["manager", "reports", "stock"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 7 - ALUR DONASI",
+      "item": [
+        {
+          "name": "22. Login PELANGGAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"pelanggan_token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"pelanggan_budi\",\n  \"password\": \"Budi@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "23. Donasi Tersedia",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{pelanggan_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pelanggan/donasi-tersedia",
+              "host": ["{{base_url}}"],
+              "path": ["pelanggan", "donasi-tersedia"]
+            }
+          }
+        },
+        {
+          "name": "24. Klaim Donasi",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{pelanggan_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"surplusPostId\": 1,\n  \"catatan\": \"Saya ambil sore ini jam 4\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pelanggan/klaim",
+              "host": ["{{base_url}}"],
+              "path": ["pelanggan", "klaim"]
+            }
+          }
+        },
+        {
+          "name": "25. Manager Approve Klaim",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Silakan diambil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/manager/donations/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["manager", "donations", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "26. Riwayat Klaim",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{pelanggan_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pelanggan/riwayat",
+              "host": ["{{base_url}}"],
+              "path": ["pelanggan", "riwayat"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FASE 8 - EDGE CASE & SECURITY TEST",
+      "item": [
+        {
+          "name": "27. Klaim Donasi yg Sudah DiKlaim",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{pelanggan_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"surplusPostId\": 1,\n  \"catatan\": \"Saya coba klaim lagi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pelanggan/klaim",
+              "host": ["{{base_url}}"],
+              "path": ["pelanggan", "klaim"]
+            }
+          }
+        },
+        {
+          "name": "28. Akses Tanpa Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "29. Akses Admin dengan Token Pelanggan",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{pelanggan_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "30. Init Admin Lagi (Harus Gagal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin2\",\n  \"password\": \"Admin@123\",\n  \"namaLengkap\": \"Hacker\",\n  \"email\": \"hacker@indcaffe.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/init-admin",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "init-admin"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8081/api"
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "manager_token",
+      "value": ""
+    },
+    {
+      "key": "gudang_token",
+      "value": ""
+    },
+    {
+      "key": "pelanggan_token",
+      "value": ""
+    }
+  ]
+}

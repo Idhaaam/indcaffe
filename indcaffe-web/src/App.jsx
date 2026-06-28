@@ -16,8 +16,18 @@ import ChatPage from './pages/ChatPage';
 import MitraChatPage from './pages/MitraChatPage';
 import RegisterCafePage from './pages/RegisterCafePage';
 import RegisterMitraPage from './pages/RegisterMitraPage';
+import AdminApprovalsPage from './pages/AdminApprovalsPage';
+import AdminCategoriesPage from './pages/AdminCategoriesPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import ReportsPage from './pages/ReportsPage';
+import ForumPage from './pages/ForumPage';
+import ForumDetailPage from './pages/ForumDetailPage';
+import StorePage from './pages/StorePage';
+import CartPage from './pages/CartPage';
+import ReviewPage from './pages/ReviewPage';
+import InventoryPage from './pages/InventoryPage';
 import { AppProvider } from './context/AppContext';
-
 function App() {
   return (
     <AppProvider>
@@ -40,6 +50,21 @@ function App() {
         <Route path="/mitra-riwayat" element={<MitraRiwayatDonasiPage />} />
         <Route path="/mitra-profile" element={<MitraProfilePage />} />
         <Route path="/mitra-chat" element={<MitraChatPage />} />
+        <Route path="/admin/approvals" element={<AdminApprovalsPage />} />
+        <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+        <Route path="/admin/users" element={<AdminUsersPage />} />
+        
+        {/* Manager & Community */}
+        <Route path="/manager/analytics" element={<AnalyticsPage />} />
+        <Route path="/manager/reports" element={<ReportsPage />} />
+        <Route path="/community/forum" element={<ForumPage />} />
+        <Route path="/community/forum/:id" element={<ForumDetailPage />} />
+        
+        {/* Pelanggan & Gudang */}
+        <Route path="/store" element={<StorePage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/review/:cafeId" element={<ReviewPage />} />
+        <Route path="/warehouse/inventory" element={<InventoryPage />} />
       </Routes>
     </Router>
     </AppProvider>

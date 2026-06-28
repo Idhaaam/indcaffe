@@ -20,7 +20,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/gudang")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasAuthority('ADMIN_GUDANG')")
 @RequiredArgsConstructor
@@ -28,6 +27,8 @@ public class GudangController {
 
     private final GudangService gudangService;
     private final UserRepository userRepository;
+    private final com.indcaffe.repository.WarehouseStockRepository warehouseStockRepository;
+    private final com.indcaffe.repository.ProductRepository productRepository;
 
     private Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -37,37 +38,76 @@ public class GudangController {
         return currentUser.getId();
     }
 
-    @PostMapping("/barang-masuk")
+    @PostMapping("/api/gudang/barang-masuk")
     public ResponseEntity<StockTransaction> inputBarangMasuk(@Valid @RequestBody BarangMasukDTO request) {
         Long userId = getCurrentUserId();
         return ResponseEntity.ok(gudangService.inputBarangMasuk(request, userId));
     }
 
-    @PostMapping("/barang-keluar")
+    @PostMapping("/api/gudang/barang-keluar")
     public ResponseEntity<StockTransaction> inputBarangKeluar(@Valid @RequestBody BarangKeluarDTO request) {
         Long userId = getCurrentUserId();
         return ResponseEntity.ok(gudangService.inputBarangKeluar(request, userId));
     }
 
-    @GetMapping("/expiry-alert")
+    @GetMapping("/api/gudang/expiry-alert")
     public ResponseEntity<List<Product>> getExpiryAlert() {
         return ResponseEntity.ok(gudangService.getExpiryAlert());
     }
 
-    @PostMapping("/stock-opname")
+    @PostMapping("/api/gudang/stock-opname")
     public ResponseEntity<?> stockOpname(@Valid @RequestBody StockOpnameDTO request) {
         Long userId = getCurrentUserId();
         return ResponseEntity.ok(gudangService.stockOpname(request, userId));
     }
 
-    @PutMapping("/produk/{id}/siap-donasi")
+    @PutMapping("/api/gudang/produk/{id}/siap-donasi")
     public ResponseEntity<SurplusPost> tandaiSiapDonasi(@PathVariable Long id, @Valid @RequestBody SiapDonasiDTO request) {
         Long userId = getCurrentUserId();
         return ResponseEntity.ok(gudangService.tandaiSiapDonasi(id, request, userId));
     }
 
-    @GetMapping("/stok")
+    @GetMapping("/api/gudang/stok")
     public ResponseEntity<List<Product>> getStokRealTime() {
         return ResponseEntity.ok(gudangService.getStokRealTime());
+    }
+
+    @GetMapping("/api/warehouse/inventory")
+    @PreAuthorize("permitAll()") // Or whatever authorization is required. Assuming inherited or permitAll. We'll stick to class level preauth if present. But wait, class level is ADMIN_GUDANG. So it's fine.
+    public ResponseEntity<List<com.indcaffe.entity.WarehouseStock>> getAllStock() {
+        return ResponseEntity.ok(warehouseStockRepository.findAll());
+    }
+
+    @PostMapping("/api/warehouse/inventory")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> recordMovement(@RequestBody MovementRequestDTO request) {
+        if (request.getProductId() == null || request.getQuantity() == null || request.getType() == null) {
+            return ResponseEntity.badRequest().body("ProductId, quantity, and type are required");
+        }
+
+        java.util.Optional<Product> productOpt = productRepository.findById(request.getProductId());
+        if (productOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Product not found");
+        }
+
+        Product product = productOpt.get();
+        com.indcaffe.entity.WarehouseStock stock = warehouseStockRepository.findByProductId(product.getId())
+                .orElse(com.indcaffe.entity.WarehouseStock.builder().product(product).build());
+
+        if (request.getType().equalsIgnoreCase("IN")) {
+            stock.setQuantityIn(stock.getQuantityIn() + request.getQuantity());
+            stock.setCurrentStock(stock.getCurrentStock() + request.getQuantity());
+        } else if (request.getType().equalsIgnoreCase("OUT")) {
+            if (stock.getCurrentStock() < request.getQuantity()) {
+                return ResponseEntity.badRequest().body("Insufficient stock in warehouse");
+            }
+            stock.setQuantityOut(stock.getQuantityOut() + request.getQuantity());
+            stock.setCurrentStock(stock.getCurrentStock() - request.getQuantity());
+        } else {
+            return ResponseEntity.badRequest().body("Invalid movement type, must be IN or OUT");
+        }
+
+        com.indcaffe.entity.WarehouseStock saved = warehouseStockRepository.save(stock);
+        return ResponseEntity.ok(saved);
     }
 }

@@ -25,11 +25,24 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean isActive = true;
+
+    @Column(nullable = false)
+    private Boolean isApproved;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (isActive == null) {
+            isActive = true;
+        }
+        if (isApproved == null) {
+            isApproved = (role != Role.CAFE && role != Role.MITRA);
+        }
     }
 }

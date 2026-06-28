@@ -48,7 +48,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getIsActive() != null && user.getIsActive() && 
+               user.getIsApproved() != null && user.getIsApproved();
     }
     
     public User getUser() {

@@ -41,6 +41,34 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
+    @PostMapping("/init-all")
+    public ResponseEntity<?> initAll() {
+        String[] usernames = {"cafe_demo", "admin_demo", "mitra_demo", "manager_demo", "gudang_demo", "pelanggan_demo"};
+        Role[] roles = {Role.CAFE, Role.ADMIN, Role.MITRA, Role.MANAGER, Role.ADMIN_GUDANG, Role.PELANGGAN};
+
+        for (int i = 0; i < usernames.length; i++) {
+            if (!userRepository.existsByUsername(usernames[i])) {
+                User user = User.builder()
+                        .username(usernames[i])
+                        .password(encoder.encode("password123"))
+                        .role(roles[i])
+                        .isActive(true)
+                        .isApproved(true)
+                        .build();
+                userRepository.save(user);
+
+                if (roles[i] == Role.CAFE) {
+                    Cafe cafe = Cafe.builder().user(user).name("Cafe Demo").address("Jl. Demo").city("Jakarta").build();
+                    cafeRepository.save(cafe);
+                } else if (roles[i] == Role.MITRA) {
+                    Mitra mitra = Mitra.builder().user(user).name("Mitra Demo").address("Jl. Mitra").build();
+                    mitraRepository.save(mitra);
+                }
+            }
+        }
+        return ResponseEntity.ok("All test accounts created successfully.");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest loginRequest) {
         try {

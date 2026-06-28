@@ -25,6 +25,8 @@ public class ManagerController {
 
     private final ManagerService managerService;
     private final UserRepository userRepository;
+    private final com.indcaffe.repository.SurplusPostRepository surplusPostRepository;
+    private final com.indcaffe.repository.CafeRepository cafeRepository;
 
     private Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -89,5 +91,47 @@ public class ManagerController {
     @GetMapping("/notifications/stock-alerts")
     public ResponseEntity<List<StockAlertDTO>> getStockAlerts() {
         return ResponseEntity.ok(managerService.getStockAlerts());
+    }
+
+    // --- ANALYTICS ---
+    @GetMapping("/analytics")
+    public ResponseEntity<ManagerAnalyticsResponseDTO> getAnalytics() {
+        Double totalSurplusSaved = surplusPostRepository.sumQuantityByStatus(com.indcaffe.entity.SurplusStatus.SELESAI);
+        if (totalSurplusSaved == null) totalSurplusSaved = 0.0;
+        
+        Double totalValue = surplusPostRepository.sumValueByStatus(com.indcaffe.entity.SurplusStatus.SELESAI);
+        if (totalValue == null) totalValue = 0.0;
+
+        long activeCafesCount = cafeRepository.count();
+        
+        java.time.LocalDateTime startOfMonth = java.time.LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        long newUsersCount = userRepository.countByCreatedAtAfter(startOfMonth);
+
+        // Mocked chart data
+        List<java.util.Map<String, Object>> pieChartData = java.util.Arrays.asList(
+            java.util.Map.of("name", "Makanan Berat", "value", 400),
+            java.util.Map.of("name", "Snack", "value", 300),
+            java.util.Map.of("name", "Minuman", "value", 300)
+        );
+
+        List<java.util.Map<String, Object>> barChartData = java.util.Arrays.asList(
+            java.util.Map.of("name", "Jan", "surplus", 4000, "value", 2400),
+            java.util.Map.of("name", "Feb", "surplus", 3000, "value", 1398),
+            java.util.Map.of("name", "Mar", "surplus", 2000, "value", 9800),
+            java.util.Map.of("name", "Apr", "surplus", 2780, "value", 3908),
+            java.util.Map.of("name", "May", "surplus", 1890, "value", 4800),
+            java.util.Map.of("name", "Jun", "surplus", 2390, "value", 3800)
+        );
+
+        ManagerAnalyticsResponseDTO response = ManagerAnalyticsResponseDTO.builder()
+                .totalSurplusSaved(totalSurplusSaved)
+                .totalValue(totalValue)
+                .activeCafesCount(activeCafesCount)
+                .newUsersCount(newUsersCount)
+                .pieChartData(pieChartData)
+                .barChartData(barChartData)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

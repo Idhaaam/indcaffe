@@ -89,7 +89,7 @@ export const AppProvider = ({ children }) => {
         category: sp.product?.category?.name,
         expiry: new Date(sp.expiryDate).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
         sisa: sp.quantity,
-        status: sp.status === 'AVAILABLE' ? 'Tersedia' : (sp.status === 'CLAIMED' ? 'Dipesan' : 'Habis'),
+        status: sp.status === 'TERSEDIA' ? 'Tersedia' : (sp.status === 'DIKLAIM' ? 'Dipesan' : 'Habis'),
         cafe: sp.cafe?.name || 'IndCaffe Network',
         cafeUserId: sp.cafe?.user?.id,
         cafeUsername: sp.cafe?.user?.username,
@@ -113,7 +113,7 @@ export const AppProvider = ({ children }) => {
            quantity: c.quantity,
            mitra: c.claimedBy?.name || 'Panti Asuhan Kasih',
            delivery: 'Jemput Sendiri',
-           status: c.status === 'CLAIMED' ? 'Menunggu' : (c.status === 'PICKED_UP' ? 'Selesai' : 'Kadaluarsa'),
+           status: c.status === 'DIKLAIM' ? 'Menunggu' : (c.status === 'SELESAI' ? 'Selesai' : 'Kadaluarsa'),
            date: new Date(c.claimDate || new Date()).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
            price: c.price || 0,
            totalPrice: (c.price || 0) * c.quantity

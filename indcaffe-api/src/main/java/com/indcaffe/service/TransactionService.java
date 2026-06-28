@@ -77,6 +77,7 @@ public class TransactionService {
         SurplusPost savedSurplus = surplusRepo.save(surplus);
         org.hibernate.Hibernate.initialize(savedSurplus.getProduct().getCategory());
         org.hibernate.Hibernate.initialize(savedSurplus.getProduct().getCafe());
+        org.hibernate.Hibernate.initialize(savedSurplus.getCafe());
         return savedSurplus;
     }
 

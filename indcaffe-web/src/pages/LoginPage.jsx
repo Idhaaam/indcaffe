@@ -44,6 +44,10 @@ const LoginPage = () => {
         navigate('/dashboard');
       } else if (data.role === 'MITRA') {
         navigate('/mitra-donasi');
+      } else if (data.role === 'ADMIN') {
+        navigate('/admin/users');
+      } else if (data.role === 'PELANGGAN') {
+        navigate('/store');
       } else {
         setError('Role tidak dikenali.');
       }

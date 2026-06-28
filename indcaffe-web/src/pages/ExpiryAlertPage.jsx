@@ -33,7 +33,7 @@ const ExpiryAlertPage = () => {
         cafe: { id: parseInt(cafeId) },
         quantity: parseFloat(formData.quantity),
         price: parseFloat(formData.price || 0),
-        expiryDate: new Date(formData.expiryDate).toISOString()
+        expiryDate: formData.expiryDate
       });
       setShowModal(false);
       fetchAllData();
@@ -64,6 +64,7 @@ const ExpiryAlertPage = () => {
               <thead>
                 <tr style={{ background: 'var(--primary-color)', color: 'white' }}>
                   <th style={{ padding: '16px 24px', width: '50px' }}>Urgensi</th>
+                  <th style={{ padding: '16px 24px', width: '60px' }}>Foto</th>
                   <th style={{ padding: '16px 24px' }}>Produk</th>
                   <th style={{ padding: '16px 24px' }}>Kategori</th>
                   <th style={{ padding: '16px 24px' }}>Sisa Stok</th>
@@ -75,6 +76,15 @@ const ExpiryAlertPage = () => {
                 {expiryAlerts.map(product => (
                   <tr key={product.id} style={{ borderBottom: '1px solid var(--border-color)', background: '#FFEBEE' }}>
                     <td style={{ padding: '16px 24px', textAlign: 'center' }}>🔴</td>
+                    <td style={{ padding: '16px 24px' }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden', background: 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {product.imageUrl ? (
+                          <img src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:8081${product.imageUrl}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <span style={{ fontSize: '10px', color: '#888' }}>No Image</span>
+                        )}
+                      </div>
+                    </td>
                     <td style={{ padding: '16px 24px', fontWeight: '600' }}>{product.name}</td>
                     <td style={{ padding: '16px 24px' }}>{product.category?.name || '-'}</td>
                     <td style={{ padding: '16px 24px' }}>{product.currentStock} {product.unit}</td>

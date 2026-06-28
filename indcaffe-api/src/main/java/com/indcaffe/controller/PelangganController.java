@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/pelanggan")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasAuthority('PELANGGAN')")
+@PreAuthorize("hasAuthority('ROLE_PELANGGAN')")
 @RequiredArgsConstructor
 public class PelangganController {
 

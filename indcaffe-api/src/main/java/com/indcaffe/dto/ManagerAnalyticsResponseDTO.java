@@ -16,4 +16,5 @@ public class ManagerAnalyticsResponseDTO {
     // Chart data
     private List<Map<String, Object>> pieChartData;
     private List<Map<String, Object>> barChartData;
+    private List<Map<String, Object>> lineChartData;
 }

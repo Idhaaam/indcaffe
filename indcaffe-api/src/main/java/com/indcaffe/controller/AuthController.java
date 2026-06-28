@@ -43,8 +43,8 @@ public class AuthController {
 
     @PostMapping("/init-all")
     public ResponseEntity<?> initAll() {
-        String[] usernames = {"cafe_demo", "admin_demo", "mitra_demo", "manager_demo", "gudang_demo", "pelanggan_demo"};
-        Role[] roles = {Role.CAFE, Role.ADMIN, Role.MITRA, Role.MANAGER, Role.ADMIN_GUDANG, Role.PELANGGAN};
+        String[] usernames = {"cafe_demo", "admin_demo", "mitra_demo", "pelanggan_demo"};
+        Role[] roles = {Role.CAFE, Role.ADMIN, Role.MITRA, Role.PELANGGAN};
 
         for (int i = 0; i < usernames.length; i++) {
             if (!userRepository.existsByUsername(usernames[i])) {
@@ -61,7 +61,7 @@ public class AuthController {
                     Cafe cafe = Cafe.builder().user(user).name("Cafe Demo").address("Jl. Demo").city("Jakarta").build();
                     cafeRepository.save(cafe);
                 } else if (roles[i] == Role.MITRA) {
-                    Mitra mitra = Mitra.builder().user(user).name("Mitra Demo").address("Jl. Mitra").build();
+                    Mitra mitra = Mitra.builder().user(user).name("Mitra Demo").city("Jakarta").build();
                     mitraRepository.save(mitra);
                 }
             }

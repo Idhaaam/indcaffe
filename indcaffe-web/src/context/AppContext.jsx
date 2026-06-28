@@ -93,7 +93,8 @@ export const AppProvider = ({ children }) => {
         cafe: sp.cafe?.name || 'IndCaffe Network',
         cafeUserId: sp.cafe?.user?.id,
         cafeUsername: sp.cafe?.user?.username,
-        price: sp.price || 0
+        price: sp.price || 0,
+        imageUrl: sp.product?.imageUrl
       }));
       setProducts(mapped);
     } catch (err) {

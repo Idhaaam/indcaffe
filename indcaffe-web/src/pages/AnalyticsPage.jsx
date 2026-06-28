@@ -6,14 +6,7 @@ import api from '../api';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8B5CF6', '#EC4899'];
 
-const mockLineData = [
-  { name: 'Jan', pengguna: 400 },
-  { name: 'Feb', pengguna: 600 },
-  { name: 'Mar', pengguna: 800 },
-  { name: 'Apr', pengguna: 1200 },
-  { name: 'Mei', pengguna: 1500 },
-  { name: 'Jun', pengguna: 2100 },
-];
+
 
 export default function AnalyticsPage() {
   const [data, setData] = useState({
@@ -23,7 +16,7 @@ export default function AnalyticsPage() {
     newUsersCount: 0,
     pieChartData: [],
     barChartData: [],
-    lineChartData: mockLineData
+    lineChartData: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -47,6 +40,11 @@ export default function AnalyticsPage() {
         value: item.value !== undefined ? item.value : (item.count || 0)
       })) || [];
 
+      const mappedLineData = apiData.lineChartData?.map(item => ({
+        name: item.name || '',
+        pengguna: item.pengguna || 0
+      })) || [];
+
       setData(prev => ({
         ...prev,
         totalSurplusSaved: apiData.totalSurplusSaved || 0,
@@ -55,6 +53,7 @@ export default function AnalyticsPage() {
         newUsersCount: apiData.newUsersCount || 0,
         pieChartData: mappedPieData.length ? mappedPieData : prev.pieChartData,
         barChartData: mappedBarData.length ? mappedBarData : prev.barChartData,
+        lineChartData: mappedLineData.length ? mappedLineData : prev.lineChartData,
       }));
     } catch (error) {
       console.error('Failed to fetch analytics', error);

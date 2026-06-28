@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Coffee, LayoutDashboard, Package, Inbox, AlertTriangle, LogOut, Moon, Sun, Bell, User, HeartHandshake, MessageCircle, Menu } from 'lucide-react';
+import { Coffee, LayoutDashboard, Package, Inbox, AlertTriangle, LogOut, Moon, Sun, Bell, User, HeartHandshake, MessageCircle, Menu, Store } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const InternalLayout = ({ children, title }) => {
@@ -19,6 +19,7 @@ const InternalLayout = ({ children, title }) => {
 
   const username = localStorage.getItem('username') || 'Admin';
   const cafeName = localStorage.getItem('name') || username;
+  const role = localStorage.getItem('role') || 'CAFE';
 
   return (
     <div className="app-layout">
@@ -34,73 +35,223 @@ const InternalLayout = ({ children, title }) => {
         
         <div style={{ padding: '0 24px', marginBottom: '24px' }}>
           <p style={{ color: 'white', fontSize: '14px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>☕ {cafeName}</p>
-          <span style={{ fontSize: '12px', color: 'var(--accent-green)' }}>Admin</span>
+          <span style={{ fontSize: '12px', color: 'var(--accent-green)' }}>{role}</span>
         </div>
 
         <nav>
           <ul style={{ padding: '0 12px' }}>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/dashboard" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/dashboard' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/dashboard' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/dashboard' ? 1 : 0.7
-              }}>
-                <LayoutDashboard size={20} /> Dashboard
-              </Link>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/produk" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/produk' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/produk' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/produk' ? 1 : 0.7
-              }}>
-                <Package size={20} /> Produk
-              </Link>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/stok-masuk" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/stok-masuk' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/stok-masuk' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/stok-masuk' ? 1 : 0.7
-              }}>
-                <Inbox size={20} /> Stok Masuk
-              </Link>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/expiry-alert" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/expiry-alert' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/expiry-alert' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/expiry-alert' ? 1 : 0.7
-              }}>
-                <AlertTriangle size={20} /> Expiry Alert 
-                {expiryAlerts && expiryAlerts.length > 0 && <span className="badge badge-red" style={{ marginLeft: 'auto' }}>{expiryAlerts.length}</span>}
-              </Link>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/cafe-klaim" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/cafe-klaim' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/cafe-klaim' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/cafe-klaim' ? 1 : 0.7
-              }}>
-                <HeartHandshake size={20} /> Pesanan Masuk 
-                {claims && claims.length > 0 && <span className="badge" style={{ background: 'var(--accent-blue)', color: 'white', marginLeft: 'auto' }}>{claims.length}</span>}
-              </Link>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <Link to="/chat" style={{ 
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                background: currentPath === '/chat' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                borderLeft: currentPath === '/chat' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                color: 'white', borderRadius: '4px', opacity: currentPath === '/chat' ? 1 : 0.7
-              }}>
-                <MessageCircle size={20} /> Pesan
-              </Link>
-            </li>
+            {/* CAFE LINKS */}
+            {role === 'CAFE' && (
+              <>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/dashboard" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/dashboard' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/dashboard' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/dashboard' ? 1 : 0.7
+                  }}>
+                    <LayoutDashboard size={20} /> Dashboard
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/produk" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/produk' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/produk' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/produk' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Produk
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/stok-masuk" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/stok-masuk' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/stok-masuk' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/stok-masuk' ? 1 : 0.7
+                  }}>
+                    <Inbox size={20} /> Stok Masuk
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/expiry-alert" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/expiry-alert' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/expiry-alert' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/expiry-alert' ? 1 : 0.7
+                  }}>
+                    <AlertTriangle size={20} /> Expiry Alert 
+                    {expiryAlerts && expiryAlerts.length > 0 && <span className="badge badge-red" style={{ marginLeft: 'auto' }}>{expiryAlerts.length}</span>}
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/cafe-surplus" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/cafe-surplus' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/cafe-surplus' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/cafe-surplus' ? 1 : 0.7
+                  }}>
+                    <Store size={20} /> Etalase Surplus
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/cafe-klaim" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/cafe-klaim' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/cafe-klaim' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/cafe-klaim' ? 1 : 0.7
+                  }}>
+                    <HeartHandshake size={20} /> Pesanan Masuk 
+                    {claims && claims.length > 0 && <span className="badge" style={{ background: 'var(--accent-blue)', color: 'white', marginLeft: 'auto' }}>{claims.length}</span>}
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {/* SUPER ADMIN LINKS */}
+            {role === 'ADMIN' && (
+              <>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/admin/approvals" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/admin/approvals' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/admin/approvals' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/admin/approvals' ? 1 : 0.7
+                  }}>
+                    <HeartHandshake size={20} /> Persetujuan Akun
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/admin/categories" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/admin/categories' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/admin/categories' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/admin/categories' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Master Kategori
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/admin/users" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/admin/users' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/admin/users' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/admin/users' ? 1 : 0.7
+                  }}>
+                    <User size={20} /> Manajemen Pengguna
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/manager/analytics" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/manager/analytics' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/manager/analytics' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/manager/analytics' ? 1 : 0.7
+                  }}>
+                    <LayoutDashboard size={20} /> Analytics
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/manager/reports" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/manager/reports' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/manager/reports' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/manager/reports' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Laporan
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/warehouse/inventory" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/warehouse/inventory' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/warehouse/inventory' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/warehouse/inventory' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Inventory Gudang
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {/* MITRA LINKS */}
+            {role === 'MITRA' && (
+              <>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/mitra-donasi" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/mitra-donasi' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/mitra-donasi' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-donasi' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Marketplace
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/mitra-klaim" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/mitra-klaim' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/mitra-klaim' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-klaim' ? 1 : 0.7
+                  }}>
+                    <Inbox size={20} /> Pesanan Saya
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/mitra-riwayat" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/mitra-riwayat' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/mitra-riwayat' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-riwayat' ? 1 : 0.7
+                  }}>
+                    <LayoutDashboard size={20} /> Riwayat
+                  </Link>
+                </li>
+              </>
+            )}
+
+
+
+            {/* PELANGGAN LINKS */}
+            {role === 'PELANGGAN' && (
+              <>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/store" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/store' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/store' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/store' ? 1 : 0.7
+                  }}>
+                    <Coffee size={20} /> Store
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/cart" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/cart' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/cart' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/cart' ? 1 : 0.7
+                  }}>
+                    <Package size={20} /> Keranjang
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {/* COMMON LINKS (Forum) */}
+            {(role === 'CAFE' || role === 'MITRA' || role === 'PELANGGAN') && (
+              <li style={{ marginBottom: '8px' }}>
+                <Link to="/community/forum" style={{ 
+                  display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                  background: currentPath === '/community/forum' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                  borderLeft: currentPath === '/community/forum' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                  color: 'white', borderRadius: '4px', opacity: currentPath === '/community/forum' ? 1 : 0.7
+                }}>
+                  <MessageCircle size={20} /> Forum Diskusi
+                </Link>
+              </li>
+            )}
+
             <li style={{ marginTop: 'auto', paddingTop: '24px' }}>
               <a href="#" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', color: '#EF5350' }}>
                 <LogOut size={20} /> Logout

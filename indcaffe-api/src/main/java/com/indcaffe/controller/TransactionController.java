@@ -80,14 +80,14 @@ public class TransactionController {
     }
 
     @PostMapping("/pelanggan/klaim")
-    @PreAuthorize("hasAuthority('MITRA')")
+    @PreAuthorize("hasAuthority('ROLE_MITRA')")
     public ResponseEntity<ClaimResponseDTO> claimDonasi(@Valid @RequestBody ClaimRequestDTO request) {
         Long mitraId = getCurrentMitraId();
         return ResponseEntity.ok(transactionService.claimDonasi(request, mitraId));
     }
 
     @PutMapping("/pelanggan/klaim/{id}/batal")
-    @PreAuthorize("hasAuthority('MITRA')")
+    @PreAuthorize("hasAuthority('ROLE_MITRA')")
     public ResponseEntity<ClaimResponseDTO> batalkanKlaim(@PathVariable Long id) {
         Long mitraId = getCurrentMitraId();
         return ResponseEntity.ok(transactionService.batalkanKlaim(id, mitraId));

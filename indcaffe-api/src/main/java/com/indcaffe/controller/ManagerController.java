@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/manager")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasAuthority('MANAGER')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class ManagerController {
 
@@ -107,21 +107,30 @@ public class ManagerController {
         java.time.LocalDateTime startOfMonth = java.time.LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         long newUsersCount = userRepository.countByCreatedAtAfter(startOfMonth);
 
-        // Mocked chart data
-        List<java.util.Map<String, Object>> pieChartData = java.util.Arrays.asList(
-            java.util.Map.of("name", "Makanan Berat", "value", 400),
-            java.util.Map.of("name", "Snack", "value", 300),
-            java.util.Map.of("name", "Minuman", "value", 300)
-        );
+        // Dynamic Chart data
+        List<Object[]> rawPieData = surplusPostRepository.getPieChartData();
+        List<java.util.Map<String, Object>> pieChartData = new java.util.ArrayList<>();
+        for (Object[] row : rawPieData) {
+            pieChartData.add(java.util.Map.of("name", String.valueOf(row[0]), "value", ((Number) row[1]).longValue()));
+        }
 
-        List<java.util.Map<String, Object>> barChartData = java.util.Arrays.asList(
-            java.util.Map.of("name", "Jan", "surplus", 4000, "value", 2400),
-            java.util.Map.of("name", "Feb", "surplus", 3000, "value", 1398),
-            java.util.Map.of("name", "Mar", "surplus", 2000, "value", 9800),
-            java.util.Map.of("name", "Apr", "surplus", 2780, "value", 3908),
-            java.util.Map.of("name", "May", "surplus", 1890, "value", 4800),
-            java.util.Map.of("name", "Jun", "surplus", 2390, "value", 3800)
-        );
+        String[] monthNames = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+        List<Object[]> rawBarData = surplusPostRepository.getBarChartData();
+        List<java.util.Map<String, Object>> barChartData = new java.util.ArrayList<>();
+        for (Object[] row : rawBarData) {
+            int monthIdx = ((Number) row[0]).intValue();
+            String mName = (monthIdx >= 1 && monthIdx <= 12) ? monthNames[monthIdx] : "Unknown";
+            barChartData.add(java.util.Map.of("name", mName, "surplus", ((Number) row[1]).longValue(), "value", ((Number) row[2]).doubleValue()));
+        }
+
+        List<Object[]> rawLineData = userRepository.getLineChartData();
+        List<java.util.Map<String, Object>> lineChartData = new java.util.ArrayList<>();
+        for (Object[] row : rawLineData) {
+            int monthIdx = ((Number) row[0]).intValue();
+            String mName = (monthIdx >= 1 && monthIdx <= 12) ? monthNames[monthIdx] : "Unknown";
+            lineChartData.add(java.util.Map.of("name", mName, "pengguna", ((Number) row[1]).longValue()));
+        }
 
         ManagerAnalyticsResponseDTO response = ManagerAnalyticsResponseDTO.builder()
                 .totalSurplusSaved(totalSurplusSaved)
@@ -130,6 +139,7 @@ public class ManagerController {
                 .newUsersCount(newUsersCount)
                 .pieChartData(pieChartData)
                 .barChartData(barChartData)
+                .lineChartData(lineChartData)
                 .build();
 
         return ResponseEntity.ok(response);

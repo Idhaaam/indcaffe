@@ -24,5 +24,9 @@ public record ProductRequestDTO(
     @Min(value = 0, message = "Stok tidak boleh negatif")
     Double currentStock,
 
-    LocalDate expiryDate
+    LocalDate expiryDate,
+    String imageUrl,
+    String description,
+    Double price,
+    Boolean isActive
 ) {}

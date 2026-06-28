@@ -73,7 +73,10 @@ export default function StorePage() {
             {filteredTransactions.map((transaction, idx) => {
               const product = transaction.product || {};
               // Fallback to random image if none provided
-              const image = product.image || `https://via.placeholder.com/150?text=${encodeURIComponent(product.name || 'Produk')}`;
+              let image = `https://via.placeholder.com/150?text=${encodeURIComponent(product.name || 'Produk')}`;
+              if (product.imageUrl) {
+                image = product.imageUrl.startsWith('/uploads') ? `http://localhost:8081${product.imageUrl}` : product.imageUrl;
+              }
               const price = product.price || 0;
               // Just a dummy display for normal price
               const normalPrice = price * 2; 

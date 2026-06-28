@@ -50,7 +50,7 @@ public class TransactionService {
     }
 
     public List<SurplusPost> getAllSurplus() {
-        return surplusRepo.findAll();
+        return surplusRepo.findAllWithEagerFetch();
     }
     
     public List<SurplusPost> getSurplusByCafe(Long cafeId) {

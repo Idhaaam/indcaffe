@@ -6,6 +6,7 @@ import PublicImpactPage from './pages/PublicImpactPage';
 import ProdukPage from './pages/ProdukPage';
 import StokMasukPage from './pages/StokMasukPage';
 import ExpiryAlertPage from './pages/ExpiryAlertPage';
+import CafeSurplusPage from './pages/CafeSurplusPage';
 import MitraDonasiTersediaPage from './pages/MitraDonasiTersediaPage';
 import MitraKlaimSayaPage from './pages/MitraKlaimSayaPage';
 import MitraRiwayatDonasiPage from './pages/MitraRiwayatDonasiPage';
@@ -42,6 +43,7 @@ function App() {
         <Route path="/produk" element={<ProdukPage />} />
         <Route path="/stok-masuk" element={<StokMasukPage />} />
         <Route path="/expiry-alert" element={<ExpiryAlertPage />} />
+        <Route path="/cafe-surplus" element={<CafeSurplusPage />} />
         <Route path="/cafe-klaim" element={<CafeKlaimMasukPage />} />
         <Route path="/cafe-profile" element={<CafeProfilePage />} />
         <Route path="/chat" element={<ChatPage />} />

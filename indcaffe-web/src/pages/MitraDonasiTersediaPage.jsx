@@ -115,6 +115,14 @@ const MitraDonasiTersediaPage = () => {
                 <Send size={18} />
               </button>
 
+              <div style={{ position: 'relative' }}>
+                <img 
+                  src={product.imageUrl ? (product.imageUrl.startsWith('/uploads') ? `http://localhost:8081${product.imageUrl}` : product.imageUrl) : `https://via.placeholder.com/300x150?text=${encodeURIComponent(product.name || 'Produk')}`} 
+                  alt={product.name} 
+                  style={{ width: '100%', height: '150px', objectFit: 'cover' }} 
+                />
+              </div>
+
               <div style={{ padding: '20px' }}>
                 <span className={`badge ${product.status === 'Tersedia' ? 'badge-green' : 'badge-orange'}`} style={{ marginBottom: '12px' }}>
                   📢 {product.status.toUpperCase()}

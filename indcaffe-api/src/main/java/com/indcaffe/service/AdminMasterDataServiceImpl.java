@@ -148,6 +148,10 @@ public class AdminMasterDataServiceImpl implements AdminMasterDataService {
                 .unit(request.unit())
                 .currentStock(request.currentStock())
                 .expiryDate(request.expiryDate())
+                .description(request.description())
+                .price(request.price())
+                .imageUrl(request.imageUrl())
+                .isActive(request.isActive() != null ? request.isActive() : true)
                 .build();
 
         return mapProductToDTO(productRepository.save(product));
@@ -163,6 +167,12 @@ public class AdminMasterDataServiceImpl implements AdminMasterDataService {
         product.setUnit(request.unit());
         product.setCurrentStock(request.currentStock());
         product.setExpiryDate(request.expiryDate());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setImageUrl(request.imageUrl());
+        if (request.isActive() != null) {
+            product.setIsActive(request.isActive());
+        }
 
         if (!product.getCategory().getId().equals(request.categoryId())) {
             Category category = categoryRepository.findById(request.categoryId())

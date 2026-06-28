@@ -7,6 +7,7 @@ import api from '../api';
 const ProdukPage = () => {
   const { allProducts, fetchAllData, categories } = useAppContext();
   const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({
     name: '', categoryId: categories.length > 0 ? categories[0].id : '', currentStock: 0, unit: 'pcs', expiryDate: ''
   });
@@ -21,16 +22,20 @@ const ProdukPage = () => {
         cafe: { id: parseInt(cafeId) },
         currentStock: parseFloat(formData.currentStock),
         unit: formData.unit,
-        expiryDate: formData.expiryDate ? new Date(formData.expiryDate).toISOString() : null
+        expiryDate: formData.expiryDate ? formData.expiryDate.split('T')[0] : null
       });
       setShowModal(false);
       fetchAllData();
-      setFormData({ name: '', categoryId: 1, currentStock: 0, unit: 'pcs', expiryDate: '' });
+      setFormData({ name: '', categoryId: categories.length > 0 ? categories[0].id : '', currentStock: 0, unit: 'pcs', expiryDate: '' });
     } catch (err) {
       console.error(err);
       alert('Gagal menambah produk');
     }
   };
+
+  const filteredProducts = allProducts.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <InternalLayout title="Dashboard / Produk">
@@ -47,9 +52,20 @@ const ProdukPage = () => {
       <div className="card" style={{ marginBottom: '24px', padding: '16px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-          <input type="text" className="form-input" placeholder="Cari nama produk..." style={{ paddingLeft: '44px', padding: '10px 16px 10px 44px' }} />
+          <input 
+            type="text" 
+            className="form-input" 
+            placeholder="Cari nama produk..." 
+            style={{ paddingLeft: '44px', padding: '10px 16px 10px 44px' }} 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-        <button className="btn btn-secondary" style={{ padding: '10px 16px' }}><Filter size={18}/> Reset</button>
+        {searchQuery && (
+          <button className="btn btn-secondary" style={{ padding: '10px 16px' }} onClick={() => setSearchQuery('')}>
+            <Filter size={18}/> Reset
+          </button>
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -65,12 +81,12 @@ const ProdukPage = () => {
             </tr>
           </thead>
           <tbody>
-            {allProducts.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <tr>
-                <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: '#666' }}>Belum ada produk. Silakan tambah produk baru.</td>
+                <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: '#666' }}>Tidak ada produk yang cocok dengan pencarian Anda.</td>
               </tr>
-            ) : allProducts.map((p, idx) => (
-              <tr key={p.id} style={{ borderBottom: '1px solid var(--border-color)', background: p.currentStock <= 0 ? '#FFF8E1' : 'white' }}>
+            ) : filteredProducts.map((p, idx) => (
+              <tr key={p.id} style={{ borderBottom: '1px solid var(--border-color)', background: p.currentStock <= 0 ? 'var(--bg-color, #FFF8E1)' : 'var(--card-bg, white)' }}>
                 <td style={{ padding: '16px 24px' }}>PRD-{p.id}</td>
                 <td style={{ padding: '16px 24px', fontWeight: '500' }}>{p.name}</td>
                 <td style={{ padding: '16px 24px' }}>{p.category ? p.category.name : '-'}</td>
@@ -122,7 +138,7 @@ const ProdukPage = () => {
               </div>
               <div className="form-group">
                 <label className="form-label">Tanggal Kedaluwarsa (Opsional)</label>
-                <input type="datetime-local" className="form-input" value={formData.expiryDate} onChange={e => setFormData({...formData, expiryDate: e.target.value})} />
+                <input type="date" className="form-input" value={formData.expiryDate} onChange={e => setFormData({...formData, expiryDate: e.target.value})} />
               </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}>Simpan Produk</button>
             </form>

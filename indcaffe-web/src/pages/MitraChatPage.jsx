@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import MitraLayout from '../components/MitraLayout';
 import { Send, Search, User, MessageCircle } from 'lucide-react';
 import api from '../api';
@@ -9,6 +10,7 @@ const MitraChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
+  const location = useLocation();
   
   const userId = localStorage.getItem('userId');
 
@@ -31,9 +33,25 @@ const MitraChatPage = () => {
   const fetchPartners = async () => {
     try {
       const res = await api.get(`/chat/partners/${userId}`);
-      setPartners(res.data);
-      if (res.data.length > 0) {
-        setActivePartnerId(res.data[0].id);
+      let fetchedPartners = res.data;
+      
+      if (location.state?.newPartner) {
+        const np = location.state.newPartner;
+        if (!fetchedPartners.find(p => p.id === np.id)) {
+          fetchedPartners = [np, ...fetchedPartners];
+        }
+        setPartners(fetchedPartners);
+        setActivePartnerId(np.id);
+        
+        // Auto send first product message if productContext exists
+        if (np.productContext && !messages.length) {
+            setNewMessage(`Halo, saya tertarik dengan donasi ${np.productContext.name}`);
+        }
+      } else {
+        setPartners(fetchedPartners);
+        if (fetchedPartners.length > 0) {
+          setActivePartnerId(fetchedPartners[0].id);
+        }
       }
     } catch (err) {
       console.error("Failed to fetch partners", err);

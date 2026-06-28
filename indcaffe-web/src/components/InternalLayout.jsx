@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Coffee, LayoutDashboard, Package, Inbox, AlertTriangle, LogOut, Moon, Bell, User, HeartHandshake, MessageCircle, Menu } from 'lucide-react';
+import { Coffee, LayoutDashboard, Package, Inbox, AlertTriangle, LogOut, Moon, Sun, Bell, User, HeartHandshake, MessageCircle, Menu } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const InternalLayout = ({ children, title }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { expiryAlerts, claims } = useAppContext();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const { expiryAlerts, claims, isDarkMode, toggleDarkMode } = useAppContext();
   const navigate = useNavigate();
 
   const handleLogout = (e) => {
@@ -86,7 +87,7 @@ const InternalLayout = ({ children, title }) => {
                 borderLeft: currentPath === '/cafe-klaim' ? '3px solid var(--accent-green)' : '3px solid transparent',
                 color: 'white', borderRadius: '4px', opacity: currentPath === '/cafe-klaim' ? 1 : 0.7
               }}>
-                <HeartHandshake size={20} /> Klaim Masuk 
+                <HeartHandshake size={20} /> Pesanan Masuk 
                 {claims && claims.length > 0 && <span className="badge" style={{ background: 'var(--accent-blue)', color: 'white', marginLeft: 'auto' }}>{claims.length}</span>}
               </Link>
             </li>
@@ -120,10 +121,32 @@ const InternalLayout = ({ children, title }) => {
             <h2 style={{ margin: 0, fontSize: '20px' }}>{title}</h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Moon size={20} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
-            <div style={{ position: 'relative', cursor: 'pointer' }}>
+            <div onClick={toggleDarkMode} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              {isDarkMode ? <Sun size={20} color="#FDB813" /> : <Moon size={20} color="var(--text-secondary)" />}
+            </div>
+            <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setShowNotifications(!showNotifications)}>
               <Bell size={20} color="var(--text-secondary)" />
               {expiryAlerts && expiryAlerts.length > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--accent-red)', color: 'white', fontSize: '10px', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{expiryAlerts.length}</span>}
+              {showNotifications && (
+                <div className="card dropdown-menu" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '12px', width: '300px', padding: '16px', zIndex: 100, boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
+                  <h4 style={{ margin: '0 0 12px 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>Notifikasi</h4>
+                  {expiryAlerts && expiryAlerts.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {expiryAlerts.map(alert => (
+                         <Link to="/expiry-alert" key={alert.id} style={{ display: 'flex', gap: '12px', textDecoration: 'none', color: 'inherit', alignItems: 'center' }}>
+                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-red)' }}></div>
+                            <div style={{ flex: 1 }}>
+                              <p style={{ margin: 0, fontSize: '13px', fontWeight: '500' }}>Produk Hampir Kedaluwarsa</p>
+                              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)' }}>{alert.name} (Sisa: {alert.currentStock})</p>
+                            </div>
+                         </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center' }}>Tidak ada notifikasi baru.</p>
+                  )}
+                </div>
+              )}
             </div>
             <Link to="/cafe-profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>

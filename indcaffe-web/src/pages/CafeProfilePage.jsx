@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import InternalLayout from '../components/InternalLayout';
-import { User, Building, MapPin, Clock, Camera, Save, Shield } from 'lucide-react';
+import { Building, MapPin, Clock, Save } from 'lucide-react';
+import api from '../api';
 
 const CafeProfilePage = () => {
   const username = localStorage.getItem('username') || 'Admin';
   const cafeName = localStorage.getItem('name') || username;
   const address = localStorage.getItem('address') || '';
   const city = localStorage.getItem('city') || '';
+  const cafeId = localStorage.getItem('cafeId');
 
   const [formData, setFormData] = useState({
     name: cafeName,
@@ -15,32 +17,45 @@ const CafeProfilePage = () => {
     city: city
   });
 
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    try {
+      if (cafeId && cafeId !== 'null') {
+        await api.put(`/master/cafes/${cafeId}`, {
+          name: formData.name,
+          address: formData.address,
+          city: formData.city
+        });
+        localStorage.setItem('name', formData.name);
+        localStorage.setItem('address', formData.address);
+        localStorage.setItem('city', formData.city);
+        alert('Profil berhasil disimpan!');
+      } else {
+        alert('Data Cafe ID tidak ditemukan.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Gagal menyimpan profil');
+    }
+  };
+
   return (
     <InternalLayout title="Dashboard / Profil Bisnis">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Building size={28} color="var(--primary-color)" /> Pengaturan & Profil Café
         </h2>
-        <button className="btn btn-primary"><Save size={18} /> Simpan Perubahan</button>
+        <button className="btn btn-primary" onClick={handleSaveProfile}><Save size={18} /> Simpan Perubahan</button>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        {/* Kolom Kiri: Foto & Basic Info */}
+        {/* Kolom Kiri: Basic Info */}
         <div className="card" style={{ gridColumn: 'span 1', textAlign: 'center' }}>
           <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto 16px', borderRadius: '50%', background: '#F5F5F5', border: '2px dashed var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Camera size={32} color="var(--text-secondary)" />
-            <button className="btn btn-secondary" style={{ position: 'absolute', bottom: 0, right: 0, padding: '8px', borderRadius: '50%', background: 'white' }}>
-              <User size={16} />
-            </button>
+            <Building size={48} color="var(--text-secondary)" />
           </div>
-          <h3 style={{ margin: '0 0 4px 0' }}>{cafeName}</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '13px' }}>Akun Partner - {city}</p>
-          
-          <div style={{ marginTop: '24px', textAlign: 'left', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-            <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>PENGATURAN KEAMANAN</h4>
-            <button className="btn btn-secondary" style={{ width: '100%', marginBottom: '8px', justifyContent: 'center' }}><Shield size={16}/> Ubah Password</button>
-            <button className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', color: 'var(--accent-red)', borderColor: 'var(--accent-red)' }}>Nonaktifkan Akun</button>
-          </div>
+          <h3 style={{ margin: '0 0 4px 0' }}>{formData.name}</h3>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '13px' }}>Akun Partner - {formData.city}</p>
         </div>
 
         {/* Kolom Kanan: Form Detail */}
@@ -56,6 +71,10 @@ const CafeProfilePage = () => {
               <label className="form-label">Email / Kontak</label>
               <input type="email" className="form-input" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
             </div>
+            <div className="form-group">
+              <label className="form-label">Kota</label>
+              <input type="text" className="form-input" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
+            </div>
             <div className="form-group" style={{ gridColumn: 'span 2' }}>
               <label className="form-label">Alamat Lengkap</label>
               <div style={{ position: 'relative' }}>
@@ -65,7 +84,7 @@ const CafeProfilePage = () => {
             </div>
           </div>
 
-          <h3 style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '20px' }}>Jam Operasional & Donasi</h3>
+          <h3 style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '20px' }}>Jam Operasional</h3>
           
           <div className="grid grid-cols-2 gap-4">
             <div className="form-group">
@@ -78,11 +97,11 @@ const CafeProfilePage = () => {
               </div>
             </div>
             <div className="form-group">
-              <label className="form-label">Batas Waktu Pengambilan Donasi</label>
+              <label className="form-label">Batas Waktu Pengambilan Pesanan</label>
               <select className="form-input">
                 <option>Sama dengan jam tutup (22:00)</option>
                 <option>1 jam sebelum tutup (21:00)</option>
-                <option>Fleksibel (Pilih manual tiap donasi)</option>
+                <option>Fleksibel (Pilih manual tiap pesanan)</option>
               </select>
             </div>
           </div>

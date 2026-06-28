@@ -46,7 +46,7 @@ public class MasterDataController {
     }
 
     @PostMapping("/products")
-    @PreAuthorize("hasRole('CAFE')")
+    // @PreAuthorize("hasRole('CAFE')")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
         return ResponseEntity.ok(masterDataService.saveProduct(product));
     }

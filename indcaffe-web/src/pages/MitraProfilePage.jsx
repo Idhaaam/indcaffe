@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MitraLayout from '../components/MitraLayout';
-import { User, FileText, MapPin, Phone, Camera, Save, ShieldCheck } from 'lucide-react';
+import { User, FileText, MapPin, Phone, Save, ShieldCheck } from 'lucide-react';
 
 const MitraProfilePage = () => {
   const username = localStorage.getItem('username') || 'Mitra';
@@ -15,21 +15,28 @@ const MitraProfilePage = () => {
     address: address
   });
 
+  const handleSaveProfile = (e) => {
+    e.preventDefault();
+    localStorage.setItem('name', formData.name);
+    localStorage.setItem('address', formData.address);
+    alert('Profil berhasil disimpan!');
+  };
+
   return (
     <MitraLayout title="Mitra / Profil Organisasi">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--primary-color)' }}>
           <User size={28} /> Pengaturan Profil Mitra
         </h2>
-        <button className="btn btn-primary"><Save size={18} /> Simpan Profil</button>
+        <button className="btn btn-primary" onClick={handleSaveProfile}><Save size={18} /> Simpan Profil</button>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="card" style={{ gridColumn: 'span 1', textAlign: 'center' }}>
           <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto 16px', borderRadius: '50%', background: '#E3F2FD', border: '2px dashed #90CAF9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Camera size={32} color="#1565C0" />
+            <User size={48} color="#1565C0" />
           </div>
-          <h3 style={{ margin: '0 0 4px 0' }}>{mitraName}</h3>
+          <h3 style={{ margin: '0 0 4px 0' }}>{formData.name}</h3>
           <p style={{ margin: 0, color: '#2E7D32', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', fontWeight: '500' }}>
             <ShieldCheck size={16} /> Terverifikasi - {city}
           </p>
@@ -40,7 +47,7 @@ const MitraProfilePage = () => {
               <FileText size={16} />
               <span style={{ fontSize: '13px', fontWeight: '500' }}>SK_Kemensos_2024.pdf</span>
             </div>
-            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '12px', fontSize: '12px', padding: '6px' }}>Upload Ulang Dokumen</button>
+            <p style={{ marginTop: '12px', fontSize: '12px', color: 'var(--accent-green)', fontWeight: 'bold' }}>Dokumen terverifikasi ✅</p>
           </div>
         </div>
 

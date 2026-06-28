@@ -42,7 +42,11 @@ public class TransactionService {
             product.setCurrentStock(product.getCurrentStock() - tx.getQuantity());
         }
         productRepo.save(product);
-        return stockTxRepo.save(tx);
+        StockTransaction savedTx = stockTxRepo.save(tx);
+        // Initialize proxies before returning to avoid LazyInitializationException
+        org.hibernate.Hibernate.initialize(savedTx.getProduct().getCategory());
+        org.hibernate.Hibernate.initialize(savedTx.getProduct().getCafe());
+        return savedTx;
     }
 
     public List<SurplusPost> getAllSurplus() {
@@ -69,7 +73,11 @@ public class TransactionService {
         product.setCurrentStock(product.getCurrentStock() - surplus.getQuantity());
         productRepo.save(product);
         
-        return surplusRepo.save(surplus);
+        productRepo.save(product);
+        SurplusPost savedSurplus = surplusRepo.save(surplus);
+        org.hibernate.Hibernate.initialize(savedSurplus.getProduct().getCategory());
+        org.hibernate.Hibernate.initialize(savedSurplus.getProduct().getCafe());
+        return savedSurplus;
     }
 
     @Transactional

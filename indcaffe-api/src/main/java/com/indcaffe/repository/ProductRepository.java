@@ -5,8 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByCafeId(Long cafeId);
-    List<Product> findByCategoryId(Long categoryId);
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM Product p JOIN FETCH p.category WHERE p.cafe.id = :cafeId")
+    List<Product> findByCafeId(@org.springframework.data.repository.query.Param("cafeId") Long cafeId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM Product p JOIN FETCH p.category WHERE p.category.id = :categoryId")
+    List<Product> findByCategoryId(@org.springframework.data.repository.query.Param("categoryId") Long categoryId);
 
     @org.springframework.data.jpa.repository.Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.cafe LEFT JOIN FETCH p.supplier")
     List<Product> findAllWithFetch();

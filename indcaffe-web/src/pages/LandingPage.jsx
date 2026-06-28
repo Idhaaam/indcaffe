@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Coffee, ChevronDown, CheckCircle, Heart, Globe, ArrowRight } from 'lucide-react';
+import { Coffee, Heart, Globe } from 'lucide-react';
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -10,6 +10,10 @@ const LandingPage = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div>
@@ -21,7 +25,7 @@ const LandingPage = () => {
         </div>
         <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
           <Link to="/">Home</Link>
-          <Link to="/impact">Impact</Link>
+          <a href="#" onClick={handleLinkClick} style={{ color: 'white', textDecoration: 'none' }}>Impact</a>
           <Link to="/login" className="btn btn-secondary" style={{ color: 'white', borderColor: 'white' }}>Login</Link>
           <Link to="/login" className="btn btn-primary">Daftar</Link>
         </div>
@@ -42,13 +46,13 @@ const LandingPage = () => {
       }}>
         <div className="animate-fade-in" style={{ maxWidth: '800px' }}>
           <Coffee color="var(--accent-green)" size={64} style={{ marginBottom: '24px' }} />
-          <h1 style={{ color: 'white', fontSize: '56px', marginBottom: '20px' }}>Selamatkan Makanan, Selamatkan Bumi</h1>
+          <h1 style={{ color: 'white', fontSize: '56px', marginBottom: '20px' }}>Marketplace Surplus Makanan Café</h1>
           <p style={{ fontSize: '20px', color: 'var(--secondary-color)', marginBottom: '40px', opacity: 0.9 }}>
-            Platform yang menghubungkan café dengan komunitas untuk mengurangi food waste dan memberi dampak nyata.
+            Platform jual beli yang menghubungkan café dengan komunitas untuk menjual produk surplus dengan harga terjangkau.
           </p>
           <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginBottom: '60px' }}>
-            <Link to="/login" className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '18px' }}>Daftar Café Anda</Link>
-            <Link to="/login" className="btn btn-secondary" style={{ color: 'white', borderColor: 'white', padding: '16px 32px', fontSize: '18px' }}>Daftar Sebagai Mitra</Link>
+            <Link to="/login" className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '18px' }}>Daftar Sebagai Café</Link>
+            <Link to="/login" className="btn btn-secondary" style={{ color: 'white', borderColor: 'white', padding: '16px 32px', fontSize: '18px' }}>Mulai Belanja (Mitra)</Link>
           </div>
         </div>
 
@@ -64,7 +68,7 @@ const LandingPage = () => {
           </div>
           <div>
             <h2 style={{ color: 'white', fontSize: '48px', margin: 0 }}>7,050</h2>
-            <p style={{ color: 'var(--accent-green)', fontWeight: 'bold' }}>Porsi Tersalurkan</p>
+            <p style={{ color: 'var(--accent-green)', fontWeight: 'bold' }}>Porsi Terjual</p>
           </div>
         </div>
       </section>
@@ -76,17 +80,17 @@ const LandingPage = () => {
           <div className="card">
             <Coffee size={48} color="var(--primary-color)" style={{ margin: '0 auto 20px' }} />
             <h3>1. Café Posting Surplus</h3>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Café mengunggah makanan surplus yang masih layak konsumsi sebelum terbuang.</p>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Café mengunggah makanan surplus yang masih layak konsumsi dengan harga diskon.</p>
           </div>
           <div className="card">
             <Heart size={48} color="var(--accent-red)" style={{ margin: '0 auto 20px' }} />
-            <h3>2. Mitra Klaim Donasi</h3>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Panti asuhan, masjid, dan komunitas memilih donasi yang mereka butuhkan.</p>
+            <h3>2. Mitra Pesan Produk</h3>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Komunitas atau pembeli individu memilih dan membeli produk yang mereka butuhkan.</p>
           </div>
           <div className="card">
             <Globe size={48} color="var(--accent-green)" style={{ margin: '0 auto 20px' }} />
             <h3>3. Dampak Nyata Tercipta</h3>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Makanan terselamatkan, emisi berkurang, dan komunitas terbantu.</p>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '12px' }}>Makanan terselamatkan, café mendapat pemasukan tambahan, dan pembeli hemat.</p>
           </div>
         </div>
       </section>
@@ -102,26 +106,26 @@ const LandingPage = () => {
           </div>
           <div>
             <h4 style={{ color: 'white' }}>Platform</h4>
-            <ul style={{ opacity: 0.7, lineHeight: '2' }}>
-              <li>Tentang Kami</li>
-              <li>Cara Kerja</li>
-              <li>Fitur</li>
+            <ul style={{ opacity: 0.7, lineHeight: '2', listStyle: 'none', padding: 0 }}>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>Tentang Kami</a></li>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>Cara Kerja</a></li>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>Fitur</a></li>
             </ul>
           </div>
           <div>
             <h4 style={{ color: 'white' }}>Bergabung</h4>
-            <ul style={{ opacity: 0.7, lineHeight: '2' }}>
-              <li><Link to="/login">Daftar Café</Link></li>
-              <li><Link to="/login">Daftar Mitra</Link></li>
-              <li><Link to="/login">Login</Link></li>
+            <ul style={{ opacity: 0.7, lineHeight: '2', listStyle: 'none', padding: 0 }}>
+              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Daftar Café</Link></li>
+              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Daftar Mitra</Link></li>
+              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Login</Link></li>
             </ul>
           </div>
           <div>
             <h4 style={{ color: 'white' }}>Lainnya</h4>
-            <ul style={{ opacity: 0.7, lineHeight: '2' }}>
-              <li>Kontak</li>
-              <li>FAQ</li>
-              <li>Kebijakan Privasi</li>
+            <ul style={{ opacity: 0.7, lineHeight: '2', listStyle: 'none', padding: 0 }}>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>Kontak</a></li>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</a></li>
+              <li><a href="#" onClick={handleLinkClick} style={{ color: 'inherit', textDecoration: 'none' }}>Kebijakan Privasi</a></li>
             </ul>
           </div>
         </div>

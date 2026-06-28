@@ -30,12 +30,12 @@ const CafeKlaimMasukPage = () => {
   const displayedClaims = activeTab === 'Menunggu' ? pendingClaims : activeTab === 'Disetujui' ? approvedClaims : doneClaims;
 
   return (
-    <InternalLayout title="Dashboard / Klaim Donasi Masuk">
+    <InternalLayout title="Dashboard / Pesanan Masuk">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
         <HeartHandshake size={28} color="var(--accent-blue)" />
-        <h2 style={{ margin: 0 }}>Review Klaim Donasi</h2>
+        <h2 style={{ margin: 0 }}>Review Pesanan Masuk</h2>
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Daftar permintaan donasi makanan dari Mitra Penerima yang menunggu persetujuan Anda.</p>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Daftar pesanan produk surplus dari Mitra Penerima yang menunggu persetujuan Anda.</p>
 
       {/* Tabs Filter */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
@@ -47,7 +47,7 @@ const CafeKlaimMasukPage = () => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
         {displayedClaims.length === 0 ? (
-          <EmptyState title="Tidak Ada Klaim" message={`Saat ini belum ada klaim donasi dalam status ${activeTab}.`} />
+          <EmptyState title="Tidak Ada Pesanan" message={`Saat ini belum ada pesanan dalam status ${activeTab}.`} />
         ) : (
           displayedClaims.map(claim => (
             <div key={claim.id} className="card animate-fade-in" style={{ borderLeft: `4px solid ${claim.status === 'Menunggu' ? 'var(--accent-orange)' : claim.status === 'Disetujui' ? 'var(--accent-green)' : 'var(--text-secondary)'}` }}>
@@ -58,7 +58,10 @@ const CafeKlaimMasukPage = () => {
                     <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Diajukan: {claim.date}</span>
                   </div>
                   <h3 style={{ margin: '0 0 4px 0' }}>{claim.productName}</h3>
-                  <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Jumlah yang diminta: <strong>{claim.quantity}</strong></p>
+                  <div style={{ display: 'flex', gap: '24px' }}>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Jumlah: <strong>{claim.quantity}</strong></p>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Total: <strong style={{ color: 'var(--accent-orange)' }}>Rp {claim.totalPrice?.toLocaleString('id-ID') || 0}</strong></p>
+                  </div>
                   
                   <div style={{ background: '#F5F5F5', padding: '12px', borderRadius: '8px', marginTop: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
                     <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#E3F2FD', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1565C0', fontWeight: 'bold' }}>

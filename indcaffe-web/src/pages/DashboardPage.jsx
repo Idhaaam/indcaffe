@@ -53,7 +53,7 @@ const DashboardPage = () => {
                 {dashboardStats.totalSurplusPosts}
               </h2>
               <p style={{ color: "#42A5F5", margin: 0, fontWeight: "500" }}>
-                Post Donasi
+                Post Surplus
               </p>
             </div>
           </div>
@@ -189,9 +189,9 @@ const DashboardPage = () => {
               marginBottom: "20px",
             }}
           >
-            <h4 style={{ margin: 0 }}>📋 Aktivitas Terakhir (Donasi)</h4>
+            <h4 style={{ margin: 0 }}>📋 Aktivitas Terakhir (Pesanan)</h4>
             <Link
-              to="#"
+              to="/cafe-klaim"
               style={{
                 color: "var(--accent-blue)",
                 fontSize: "12px",

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MitraLayout from '../components/MitraLayout';
 import { Search, ShoppingCart, Filter, Send, X, CheckCircle, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
@@ -15,6 +15,8 @@ const MitraDonasiTersediaPage = () => {
   const [deliveryMethod, setDeliveryMethod] = useState('Jemput Sendiri');
   const [claimQty, setClaimQty] = useState('');
 
+  const navigate = useNavigate();
+
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const handleKlaimClick = (product) => {
@@ -22,6 +24,23 @@ const MitraDonasiTersediaPage = () => {
     setClaimQty(product.sisa);
     setIsSuccess(false);
     setShowModal(true);
+  };
+
+  const handleChatClick = (product) => {
+    if (product.cafeUserId) {
+      navigate('/mitra/chat', { 
+        state: { 
+          newPartner: { 
+            id: product.cafeUserId, 
+            username: product.cafeUsername || product.cafe, 
+            role: 'CAFE',
+            productContext: product
+          } 
+        } 
+      });
+    } else {
+      alert("Maaf, Cafe ini belum terhubung ke sistem Chat.");
+    }
   };
 
   const handleConfirm = async () => {
@@ -41,12 +60,12 @@ const MitraDonasiTersediaPage = () => {
 
 
   return (
-    <MitraLayout title="Mitra / Donasi Tersedia">
+    <MitraLayout title="Mitra / Etalase Surplus">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
         <ShoppingCart size={28} color="var(--primary-color)" />
-        <h2 style={{ margin: 0, color: 'var(--primary-color)' }}>Donasi Tersedia</h2>
+        <h2 style={{ margin: 0, color: 'var(--primary-color)' }}>Etalase Surplus</h2>
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Pilih surplus makanan yang Anda butuhkan dari café-café di IndCaffe</p>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Pilih dan pesan produk surplus yang Anda butuhkan dari café-café di IndCaffe</p>
 
       {/* Filter Bar */}
       <div className="card" style={{ marginBottom: '24px', padding: '16px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -81,16 +100,29 @@ const MitraDonasiTersediaPage = () => {
 
       {/* Grid Card */}
       {filteredProducts.length === 0 ? (
-        <EmptyState title="Tidak Ada Donasi" message="Saat ini tidak ada donasi yang sesuai dengan pencarian Anda." />
+        <EmptyState title="Tidak Ada Produk" message="Saat ini tidak ada produk yang sesuai dengan pencarian Anda." />
       ) : (
         <div className="grid grid-cols-3 gap-6">
           {filteredProducts.map(product => (
-            <div key={product.id} className="card" style={{ display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden' }}>
+            <div key={product.id} className="card" style={{ display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden', position: 'relative' }}>
+              
+              {/* Chat Button */}
+              <button 
+                onClick={() => handleChatClick(product)}
+                style={{ position: 'absolute', top: '16px', right: '16px', background: 'var(--accent-orange)', color: 'white', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 8px rgba(255, 152, 0, 0.3)', zIndex: 10 }}
+                title="Chat dengan Cafe ini"
+              >
+                <Send size={18} />
+              </button>
+
               <div style={{ padding: '20px' }}>
                 <span className={`badge ${product.status === 'Tersedia' ? 'badge-green' : 'badge-orange'}`} style={{ marginBottom: '12px' }}>
                   📢 {product.status.toUpperCase()}
                 </span>
-                <h3 style={{ margin: '0 0 8px 0' }}>{product.name}</h3>
+                <h3 style={{ margin: '0 0 8px 0', paddingRight: '40px' }}>{product.name}</h3>
+                <h4 style={{ margin: '0 0 8px 0', color: 'var(--primary-color)', fontSize: '18px' }}>
+                  Rp {(product.price || 0).toLocaleString('id-ID')}
+                </h4>
                 <p style={{ margin: 0, fontWeight: '500', color: 'var(--text-secondary)' }}>☕ {product.cafe || 'IndCaffe Network'}</p>
                 <div style={{ margin: '16px 0', padding: '12px', background: '#F5F5F5', borderRadius: '8px' }}>
                   <p style={{ margin: '0 0 4px 0', fontSize: '13px' }}>Tersedia: <strong>{product.sisa}</strong></p>
@@ -108,7 +140,7 @@ const MitraDonasiTersediaPage = () => {
               </div>
               <div style={{ padding: '16px' }}>
                 <button onClick={() => handleKlaimClick(product)} className="btn btn-primary" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                  🤝 Klaim Donasi Ini
+                  🛒 Pesan Produk Ini
                 </button>
               </div>
             </div>
@@ -129,13 +161,13 @@ const MitraDonasiTersediaPage = () => {
                 <div style={{ width: '80px', height: '80px', background: '#E8F5E9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto' }}>
                   <CheckCircle size={48} color="var(--accent-green)" />
                 </div>
-                <h3 style={{ margin: '0 0 12px 0', fontSize: '24px' }}>Klaim Berhasil!</h3>
-                <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '15px', lineHeight: '1.6' }}>Permintaan Anda telah dikirim. Menunggu persetujuan dari Admin Café. Anda dapat memantau statusnya di menu "Riwayat Donasi".</p>
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '24px' }}>Pesanan Berhasil Dibuat!</h3>
+                <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '15px', lineHeight: '1.6' }}>Permintaan pesanan Anda telah dikirim. Menunggu persetujuan dari Admin Café. Anda dapat memantau statusnya di menu "Riwayat Pesanan".</p>
               </div>
             ) : (
               <>
-                <h3 style={{ margin: '0 0 8px 0', fontSize: '22px' }}>Formulir Klaim</h3>
-                <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px 0', fontSize: '14px' }}>Mohon isi detail pengambilan donasi di bawah ini.</p>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '22px' }}>Formulir Pemesanan</h3>
+                <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px 0', fontSize: '14px' }}>Mohon isi detail pesanan di bawah ini.</p>
                 
                 <div style={{ background: 'linear-gradient(to right, #F5F5F5, #FAFAFA)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '12px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div style={{ width: '48px', height: '48px', background: 'white', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
@@ -148,7 +180,7 @@ const MitraDonasiTersediaPage = () => {
                 </div>
 
                 <div style={{ marginBottom: '24px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: 'var(--text-primary)' }}>Jumlah yang Ingin Diklaim</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: 'var(--text-primary)' }}>Jumlah Pesanan</label>
                   <div style={{ position: 'relative' }}>
                     <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>#</span>
                     <input type="text" className="form-input" value={claimQty} onChange={(e) => setClaimQty(e.target.value)} style={{ paddingLeft: '40px', fontSize: '16px', fontWeight: '500', padding: '14px 16px 14px 40px', borderRadius: '12px' }} />
@@ -184,8 +216,15 @@ const MitraDonasiTersediaPage = () => {
                   </div>
                 </div>
 
+                <div style={{ marginBottom: '24px', padding: '16px', background: '#FFF8E1', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Total Harga:</span>
+                  <span style={{ fontSize: '20px', fontWeight: '900', color: 'var(--accent-orange)' }}>
+                    Rp {((selectedProduct?.price || 0) * (parseInt(claimQty) || 0)).toLocaleString('id-ID')}
+                  </span>
+                </div>
+
                 <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', fontWeight: 'bold', borderRadius: '12px', boxShadow: '0 8px 16px rgba(46, 125, 50, 0.2)' }} onClick={handleConfirm}>
-                  Ajukan Klaim Sekarang ✨
+                  Pesan Sekarang ✨
                 </button>
               </>
             )}

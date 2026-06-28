@@ -19,14 +19,17 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     private Supplier supplier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cafe_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     private Cafe cafe;
 
     private String unit;
@@ -36,6 +39,9 @@ public class Product {
 
     @Column(name = "expiry_date")
     private java.time.LocalDate expiryDate;
+
+    @Column(name = "price")
+    private Double price;
 
     @Version
     private Long version;

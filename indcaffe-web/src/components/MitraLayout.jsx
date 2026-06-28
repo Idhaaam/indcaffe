@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Coffee, ShoppingCart, ClipboardList, ScrollText, User, LogOut, Bell, Moon, MessageCircle, Menu } from 'lucide-react';
+import { Coffee, ShoppingCart, ClipboardList, ScrollText, User, LogOut, Bell, Moon, Sun, MessageCircle, Menu } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 
 const MitraLayout = ({ children, title }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const { isDarkMode, toggleDarkMode, claims } = useAppContext();
   const navigate = useNavigate();
 
   const handleLogout = (e) => {
@@ -16,6 +19,9 @@ const MitraLayout = ({ children, title }) => {
 
   const username = localStorage.getItem('username') || 'Mitra';
   const mitraName = localStorage.getItem('name') || username;
+
+  // Find newly available donasi or something, but for Mitra we can just show empty for now or use `claims`
+  const pendingClaims = claims ? claims.filter(c => c.status === 'Menunggu') : [];
 
   return (
     <div className="app-layout">
@@ -43,7 +49,7 @@ const MitraLayout = ({ children, title }) => {
                 borderLeft: currentPath === '/mitra-donasi' ? '3px solid white' : '3px solid transparent',
                 color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-donasi' ? 1 : 0.8
               }}>
-                <ShoppingCart size={20} /> Donasi Tersedia
+                <ShoppingCart size={20} /> Etalase Surplus
               </Link>
             </li>
             <li style={{ marginBottom: '8px' }}>
@@ -53,7 +59,7 @@ const MitraLayout = ({ children, title }) => {
                 borderLeft: currentPath === '/mitra-klaim' ? '3px solid white' : '3px solid transparent',
                 color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-klaim' ? 1 : 0.8
               }}>
-                <ClipboardList size={20} /> Klaim Saya
+                <ClipboardList size={20} /> Pesanan Saya
               </Link>
             </li>
             <li style={{ marginBottom: '8px' }}>
@@ -63,7 +69,7 @@ const MitraLayout = ({ children, title }) => {
                 borderLeft: currentPath === '/mitra-riwayat' ? '3px solid white' : '3px solid transparent',
                 color: 'white', borderRadius: '4px', opacity: currentPath === '/mitra-riwayat' ? 1 : 0.8
               }}>
-                <ScrollText size={20} /> Riwayat Donasi
+                <ScrollText size={20} /> Riwayat Pesanan
               </Link>
             </li>
             <li style={{ marginBottom: '8px' }}>
@@ -95,9 +101,32 @@ const MitraLayout = ({ children, title }) => {
             <h2 style={{ margin: 0, fontSize: '20px' }}>{title}</h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Moon size={20} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
-            <div style={{ position: 'relative', cursor: 'pointer' }}>
+            <div onClick={toggleDarkMode} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              {isDarkMode ? <Sun size={20} color="#FDB813" /> : <Moon size={20} color="var(--text-secondary)" />}
+            </div>
+            <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setShowNotifications(!showNotifications)}>
               <Bell size={20} color="var(--text-secondary)" />
+              {pendingClaims && pendingClaims.length > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--accent-red)', color: 'white', fontSize: '10px', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{pendingClaims.length}</span>}
+              {showNotifications && (
+                <div className="card dropdown-menu" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '12px', width: '300px', padding: '16px', zIndex: 100, boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
+                  <h4 style={{ margin: '0 0 12px 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>Notifikasi</h4>
+                  {pendingClaims && pendingClaims.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {pendingClaims.map(claim => (
+                         <Link to="/mitra-klaim" key={claim.id} style={{ display: 'flex', gap: '12px', textDecoration: 'none', color: 'inherit', alignItems: 'center' }}>
+                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-blue)' }}></div>
+                            <div style={{ flex: 1 }}>
+                              <p style={{ margin: 0, fontSize: '13px', fontWeight: '500' }}>Menunggu Konfirmasi</p>
+                              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)' }}>Pesanan {claim.productName}</p>
+                            </div>
+                         </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center' }}>Tidak ada notifikasi baru.</p>
+                  )}
+                </div>
+              )}
             </div>
             <Link to="/mitra-profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>

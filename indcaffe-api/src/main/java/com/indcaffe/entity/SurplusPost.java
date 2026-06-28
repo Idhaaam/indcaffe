@@ -29,6 +29,9 @@ public class SurplusPost {
     @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
+    @Column(name = "price")
+    private Double price;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SurplusStatus status;

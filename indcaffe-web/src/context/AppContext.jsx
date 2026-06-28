@@ -90,7 +90,10 @@ export const AppProvider = ({ children }) => {
         expiry: new Date(sp.expiryDate).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
         sisa: sp.quantity,
         status: sp.status === 'AVAILABLE' ? 'Tersedia' : (sp.status === 'CLAIMED' ? 'Dipesan' : 'Habis'),
-        cafe: sp.cafe?.name || 'IndCaffe Network'
+        cafe: sp.cafe?.name || 'IndCaffe Network',
+        cafeUserId: sp.cafe?.user?.id,
+        cafeUsername: sp.cafe?.user?.username,
+        price: sp.price || 0
       }));
       setProducts(mapped);
     } catch (err) {
@@ -111,7 +114,9 @@ export const AppProvider = ({ children }) => {
            mitra: c.claimedBy?.name || 'Panti Asuhan Kasih',
            delivery: 'Jemput Sendiri',
            status: c.status === 'CLAIMED' ? 'Menunggu' : (c.status === 'PICKED_UP' ? 'Selesai' : 'Kadaluarsa'),
-           date: new Date(c.claimDate || new Date()).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+           date: new Date(c.claimDate || new Date()).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+           price: c.price || 0,
+           totalPrice: (c.price || 0) * c.quantity
          }));
          setClaims(mapped);
       }
@@ -120,12 +125,30 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('isDarkMode');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+      localStorage.setItem('isDarkMode', 'true');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('isDarkMode', 'false');
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+
   return (
     <AppContext.Provider value={{
       products, setProducts, fetchProducts,
       claims, setClaims, fetchClaims,
       chats, setChats,
-      allProducts, dashboardStats, expiryAlerts, fetchAllData, categories
+      allProducts, dashboardStats, expiryAlerts, fetchAllData, categories,
+      isDarkMode, toggleDarkMode
     }}>
       {children}
     </AppContext.Provider>

@@ -323,3 +323,24 @@ ul { list-style: none; }
   .sidebar-overlay.open { display: block; }
   .topbar { padding: 0 16px; gap: 12px; }
 }
+
+/* Dark Mode Variables */
+body.dark {
+  --bg-color: #121212;
+  --card-bg: #1E1E1E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #AAAAAA;
+  --border-color: #333333;
+}
+body { transition: background-color 0.3s ease, color 0.3s ease; }
+.card, .topbar { transition: background-color 0.3s ease, border-color 0.3s ease; }
+.dark .form-input, .dark select.form-input, .dark textarea.form-input {
+  background-color: #2A2A2A;
+  color: #FFFFFF;
+  border-color: #444444;
+}
+.dark table th { background: #333333 !important; }
+.dark table tr:nth-child(even) { background: #222222; }
+.dark table tr { background: #1E1E1E !important; border-bottom-color: #333; }
+.dark .dropdown-menu { background: #1E1E1E; border: 1px solid #333; }
+

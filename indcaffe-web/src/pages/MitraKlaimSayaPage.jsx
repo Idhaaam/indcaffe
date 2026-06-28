@@ -11,14 +11,14 @@ const MitraKlaimSayaPage = () => {
   const filteredClaims = activeTab === 'Semua' ? claims : claims.filter(c => c.status === activeTab);
 
   return (
-    <MitraLayout title="Mitra / Klaim Saya">
+    <MitraLayout title="Mitra / Pesanan Saya">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-        <h1 style={{ fontSize: '28px', margin: 0 }}>Klaim Donasi Saya</h1>
+        <h1 style={{ fontSize: '28px', margin: 0 }}>Pesanan Saya</h1>
       </div>
 
       {/* Tabs Filter */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '8px' }}>
-        <button className={activeTab === 'Semua' ? "btn btn-primary" : "btn btn-secondary"} style={{ borderRadius: '20px', background: activeTab === 'Semua' ? 'var(--accent-blue)' : 'transparent', borderColor: activeTab === 'Semua' ? 'var(--accent-blue)' : 'var(--border-color)', color: activeTab === 'Semua' ? 'white' : 'inherit' }} onClick={() => setActiveTab('Semua')}>Semua Klaim</button>
+        <button className={activeTab === 'Semua' ? "btn btn-primary" : "btn btn-secondary"} style={{ borderRadius: '20px', background: activeTab === 'Semua' ? 'var(--accent-blue)' : 'transparent', borderColor: activeTab === 'Semua' ? 'var(--accent-blue)' : 'var(--border-color)', color: activeTab === 'Semua' ? 'white' : 'inherit' }} onClick={() => setActiveTab('Semua')}>Semua Pesanan</button>
         <button className={activeTab === 'Menunggu' ? "btn btn-primary" : "btn btn-secondary"} style={{ borderRadius: '20px', background: activeTab === 'Menunggu' ? 'var(--accent-orange)' : 'transparent', borderColor: activeTab === 'Menunggu' ? 'var(--accent-orange)' : 'var(--border-color)', color: activeTab === 'Menunggu' ? 'white' : 'inherit' }} onClick={() => setActiveTab('Menunggu')}>⏳ Menunggu</button>
         <button className={activeTab === 'Disetujui' ? "btn btn-primary" : "btn btn-secondary"} style={{ borderRadius: '20px', background: activeTab === 'Disetujui' ? 'var(--accent-green)' : 'transparent', borderColor: activeTab === 'Disetujui' ? 'var(--accent-green)' : 'var(--border-color)', color: activeTab === 'Disetujui' ? 'white' : 'inherit' }} onClick={() => setActiveTab('Disetujui')}>✅ Disetujui</button>
         <button className={activeTab === 'Selesai' ? "btn btn-primary" : "btn btn-secondary"} style={{ borderRadius: '20px', background: activeTab === 'Selesai' ? 'var(--text-secondary)' : 'transparent', borderColor: activeTab === 'Selesai' ? 'var(--text-secondary)' : 'var(--border-color)', color: activeTab === 'Selesai' ? 'white' : 'inherit' }} onClick={() => setActiveTab('Selesai')}>📦 Selesai</button>
@@ -29,7 +29,7 @@ const MitraKlaimSayaPage = () => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
         {filteredClaims.length === 0 ? (
-          <EmptyState title="Tidak Ada Klaim" message={`Anda belum memiliki riwayat klaim dengan status ${activeTab}.`} />
+          <EmptyState title="Tidak Ada Pesanan" message={`Anda belum memiliki riwayat pesanan dengan status ${activeTab}.`} />
         ) : (
           filteredClaims.map(claim => (
             <div key={claim.id} className="card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}>
@@ -58,6 +58,10 @@ const MitraKlaimSayaPage = () => {
                       <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Pengambilan</span>
                       <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{claim.delivery}</strong>
                     </div>
+                    <div>
+                      <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Total Harga</span>
+                      <strong style={{ fontSize: '14px', color: 'var(--accent-orange)' }}>Rp {claim.totalPrice?.toLocaleString('id-ID') || 0}</strong>
+                    </div>
                   </div>
                 </div>
 
@@ -70,7 +74,7 @@ const MitraKlaimSayaPage = () => {
               )}
               {claim.status === 'Disetujui' && (
                 <div style={{ background: '#E8F5E9', padding: '12px 24px', borderTop: '1px solid #C8E6C9', fontSize: '13px', color: '#2E7D32' }}>
-                  <strong>Klaim Disetujui!</strong> Silakan ambil pesanan Anda sesuai waktu yang ditentukan.
+                  <strong>Pesanan Disetujui!</strong> Silakan ambil pesanan Anda sesuai waktu yang ditentukan.
                 </div>
               )}
             </div>

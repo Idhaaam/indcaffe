@@ -77,28 +77,13 @@ public class ChatServiceImpl implements ChatService {
             throw new IllegalArgumentException("ID pengguna tidak valid");
         }
 
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pengguna dengan ID " + userId + " tidak ditemukan"));
                 
-        String userRole = user.getRole().toString();
-        List<User> partners;
-
-        // Aturan bisnis IndCaffe: CAFE chat dengan MITRA, begitu juga sebaliknya
-        if ("CAFE".equals(userRole)) {
-            partners = userRepository.findAll().stream()
-                    .filter(u -> "MITRA".equals(u.getRole().toString()))
-                    .collect(Collectors.toList());
-        } else if ("MITRA".equals(userRole)) {
-            partners = userRepository.findAll().stream()
-                    .filter(u -> "CAFE".equals(u.getRole().toString()))
-                    .collect(Collectors.toList());
-        } else {
-            // Jika role lain (ADMIN/MANAGER dll) kembalikan list kosong atau semua
-            partners = List.of(); 
-        }
-
-        return partners.stream()
-                .map(p -> new ChatPartnerDTO(p.getId(), p.getUsername(), p.getRole().toString()))
+        List<Object[]> partnerData = messageRepository.findChatPartners(userId);
+        
+        return partnerData.stream()
+                .map(obj -> new ChatPartnerDTO((Long) obj[0], (String) obj[1], obj[2].toString()))
                 .collect(Collectors.toList());
     }
 

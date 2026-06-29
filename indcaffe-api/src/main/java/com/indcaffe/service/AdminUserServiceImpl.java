@@ -84,11 +84,31 @@ public class AdminUserServiceImpl implements AdminUserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public UserResponseDTO approveUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User dengan ID " + id + " tidak ditemukan"));
+        user.setIsApproved(true);
+        return mapToDTO(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDTO toggleUserStatus(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User dengan ID " + id + " tidak ditemukan"));
+        user.setIsActive(!user.getIsActive());
+        return mapToDTO(userRepository.save(user));
+    }
+
     private UserResponseDTO mapToDTO(User user) {
         return new UserResponseDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getRole(),
+                user.getIsActive(),
+                user.getIsApproved(),
                 user.getCreatedAt()
         );
     }

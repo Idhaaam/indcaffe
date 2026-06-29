@@ -30,11 +30,13 @@ export default function ForumDetailPage() {
     if (!replyText.trim()) return;
 
     try {
-      await api.post(`/forum/${id}/replies`, { content: replyText });
+      const authorId = localStorage.getItem('userId');
+      await api.post(`/forum/${id}/replies`, { content: replyText, authorId });
       setReplyText('');
       fetchThread(); // Refresh to get the new reply
     } catch (error) {
       console.error('Failed to submit reply', error);
+      alert('Gagal membalas: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -59,7 +61,7 @@ export default function ForumDetailPage() {
   return (
     <InternalLayout title="Detail Diskusi">
       <div className="forum-detail-page">
-        <a href="/forum" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', marginBottom: '1.5rem' }}>
+        <a href="/community/forum" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', marginBottom: '1.5rem' }}>
           <ArrowLeft size={16} /> Kembali ke Forum
         </a>
 
@@ -85,7 +87,7 @@ export default function ForumDetailPage() {
               <User size={20} />
             </div>
             <div>
-              <p style={{ margin: 0, fontWeight: 'bold' }}>{thread.author || 'User'}</p>
+              <p style={{ margin: 0, fontWeight: 'bold' }}>{thread.authorName || 'User'}</p>
               <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>Penulis Thread</p>
             </div>
           </div>
@@ -103,10 +105,10 @@ export default function ForumDetailPage() {
             <div key={reply.id} className="card" style={{ padding: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                 <div style={{ width: '36px', height: '36px', backgroundColor: '#f1f5f9', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#64748b', fontWeight: 'bold' }}>
-                  {reply.author ? reply.author.charAt(0).toUpperCase() : 'U'}
+                  {reply.authorName ? reply.authorName.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div>
-                  <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.875rem' }}>{reply.author || 'User'}</p>
+                  <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.875rem' }}>{reply.authorName || 'User'}</p>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>{reply.time || (reply.createdAt ? new Date(reply.createdAt).toLocaleDateString() : '')}</p>
                 </div>
               </div>

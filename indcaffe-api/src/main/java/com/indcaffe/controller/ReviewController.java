@@ -5,11 +5,15 @@ import com.indcaffe.dto.ReviewResponseDTO;
 import com.indcaffe.entity.Cafe;
 import com.indcaffe.entity.Pelanggan;
 import com.indcaffe.entity.Review;
+import com.indcaffe.entity.User;
 import com.indcaffe.repository.CafeRepository;
 import com.indcaffe.repository.PelangganRepository;
 import com.indcaffe.repository.ReviewRepository;
+import com.indcaffe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +32,9 @@ public class ReviewController {
 
     @Autowired
     private PelangganRepository pelangganRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/cafe/{cafeId}")
     public ResponseEntity<List<ReviewResponseDTO>> getReviewsByCafe(@PathVariable Long cafeId) {
@@ -50,8 +57,14 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDTO> createReview(@RequestBody ReviewRequestDTO request) {
         Cafe cafe = cafeRepository.findById(request.getCafeId())
                 .orElseThrow(() -> new RuntimeException("Cafe not found"));
-        Pelanggan pelanggan = pelangganRepository.findById(request.getPelangganId())
-                .orElseThrow(() -> new RuntimeException("Pelanggan not found"));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Pelanggan pelanggan = pelangganRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("Only Pelanggan can create reviews"));
 
         Review review = Review.builder()
                 .cafe(cafe)

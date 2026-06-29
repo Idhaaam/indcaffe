@@ -73,6 +73,16 @@ const MitraLayout = ({ children, title }) => {
               </Link>
             </li>
             <li style={{ marginBottom: '8px' }}>
+              <Link to="/community/forum" style={{ 
+                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                background: currentPath === '/community/forum' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                borderLeft: currentPath === '/community/forum' ? '3px solid white' : '3px solid transparent',
+                color: 'white', borderRadius: '4px', opacity: currentPath === '/community/forum' ? 1 : 0.8
+              }}>
+                <MessageCircle size={20} /> Forum Diskusi
+              </Link>
+            </li>
+            <li style={{ marginBottom: '8px' }}>
               <Link to="/mitra-chat" style={{ 
                 display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
                 background: currentPath === '/mitra-chat' ? 'rgba(255,255,255,0.2)' : 'transparent',

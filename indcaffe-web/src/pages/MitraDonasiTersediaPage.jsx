@@ -28,7 +28,7 @@ const MitraDonasiTersediaPage = () => {
 
   const handleChatClick = (product) => {
     if (product.cafeUserId) {
-      navigate('/mitra/chat', { 
+      navigate('/mitra-chat', { 
         state: { 
           newPartner: { 
             id: product.cafeUserId, 
@@ -45,7 +45,10 @@ const MitraDonasiTersediaPage = () => {
 
   const handleConfirm = async () => {
     try {
-      await api.post(`/transactions/surplus/${selectedProduct.id}/claim-dummy`);
+      await api.post('/transactions/pelanggan/klaim', {
+        surplusPostId: selectedProduct.id,
+        catatan: `Metode: ${deliveryMethod}, Jumlah: ${claimQty}`
+      });
       fetchProducts(); // Refresh list to show updated status
       
       setIsSuccess(true);
@@ -54,7 +57,7 @@ const MitraDonasiTersediaPage = () => {
         setIsSuccess(false);
       }, 2500);
     } catch (err) {
-      alert('Gagal mengklaim donasi: ' + err.message);
+      alert('Gagal mengklaim donasi: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -147,8 +150,13 @@ const MitraDonasiTersediaPage = () => {
                 </p>
               </div>
               <div style={{ padding: '16px' }}>
-                <button onClick={() => handleKlaimClick(product)} className="btn btn-primary" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                  🛒 Pesan Produk Ini
+                <button 
+                  onClick={() => handleKlaimClick(product)} 
+                  className="btn btn-primary" 
+                  disabled={product.status !== 'Tersedia'}
+                  style={{ width: '100%', display: 'flex', justifyContent: 'center', opacity: product.status === 'Tersedia' ? 1 : 0.5, cursor: product.status === 'Tersedia' ? 'pointer' : 'not-allowed' }}
+                >
+                  🛒 {product.status === 'Tersedia' ? 'Pesan Produk Ini' : 'Produk Tidak Tersedia'}
                 </button>
               </div>
             </div>

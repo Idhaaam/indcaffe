@@ -152,6 +152,8 @@ public class ManagerServiceImpl implements ManagerService {
         return new SurplusPostResponseDTO(
                 p.getId(), p.getProduct().getId(), p.getProduct().getName(),
                 p.getCafe().getId(), p.getCafe().getName(),
+                p.getCafe().getUser() != null ? p.getCafe().getUser().getId() : null,
+                p.getCafe().getUser() != null ? p.getCafe().getUser().getUsername() : null,
                 p.getQuantity(), p.getExpiryDate(), p.getStatus(),
                 claimedById, claimedByName, p.getClaimDate(),
                 p.getApprovedBy() != null ? p.getApprovedBy().getId() : null,

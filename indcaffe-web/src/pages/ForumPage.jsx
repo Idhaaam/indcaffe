@@ -25,12 +25,14 @@ export default function ForumPage() {
   const handleCreateThread = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/forum', newThread);
+      const authorId = localStorage.getItem('userId');
+      await api.post('/forum', { ...newThread, authorId });
       setShowModal(false);
       setNewThread({ title: '', category: 'QnA', content: '' });
       fetchThreads();
     } catch (error) {
       console.error('Failed to create thread', error);
+      alert('Gagal membuat thread: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -65,7 +67,7 @@ export default function ForumPage() {
 
         <div className="threads-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {filteredThreads.map(thread => (
-            <a href={`/forum/${thread.id}`} key={thread.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a href={`/community/forum/${thread.id}`} key={thread.id} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="card" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)'} onMouseOut={e => e.currentTarget.style.boxShadow = ''}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
@@ -81,14 +83,14 @@ export default function ForumPage() {
                     </span>
                     <h3 style={{ margin: 0, fontSize: '1.125rem' }}>{thread.title}</h3>
                   </div>
-                  <p style={{ color: '#64748b', fontSize: '0.875rem', margin: 0 }}>
-                    Oleh <strong>{thread.author || 'User'}</strong> • {thread.date || (thread.createdAt ? new Date(thread.createdAt).toLocaleDateString() : '')}
-                  </p>
+                    <p style={{ color: '#64748b', fontSize: '0.875rem', margin: 0 }}>
+                      Oleh <strong>{thread.authorName || 'User'}</strong> • {thread.date || (thread.createdAt ? new Date(thread.createdAt).toLocaleDateString() : '')}
+                    </p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b' }}>
-                  <MessageSquare size={20} />
-                  <span>{Array.isArray(thread.replies) ? thread.replies.length : (thread.replies || 0)} balasan</span>
-                </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b' }}>
+                    <MessageSquare size={20} />
+                    <span>{thread.replyCount ?? (Array.isArray(thread.replies) ? thread.replies.length : (thread.replies || 0))} balasan</span>
+                  </div>
               </div>
             </a>
           ))}

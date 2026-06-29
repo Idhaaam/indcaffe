@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Coffee, User, Lock, Eye, EyeOff } from 'lucide-react';
+import api from '../api';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:8081/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.message || 'Login gagal.');
-      }
+      const res = await api.post('/auth/login', { username, password });
+      const data = res.data;
       
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', data.role);
@@ -52,43 +46,35 @@ const LoginPage = () => {
         setError('Role tidak dikenali.');
       }
     } catch (err) {
-      setError(err.message || 'Terjadi kesalahan jaringan.');
+      setError(err.response?.data?.message || err.message || 'Terjadi kesalahan jaringan.');
     }
   };
 
   return (
-    <div className="split-layout">
-      {/* Left Branding Column */}
-      <div className="split-left">
-        <div className="animate-fade-in" style={{ textAlign: 'center', zIndex: 10 }}>
-          <Coffee size={80} color="white" style={{ marginBottom: '24px' }} />
-          <h1 style={{ color: 'white', marginBottom: '16px' }}>IndCaffe</h1>
-          <p style={{ fontSize: '24px', fontStyle: 'italic', color: 'var(--secondary-color)', opacity: 0.9 }}>
-            "Save Food, Save Earth"
-          </p>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '60px' }}>
-            <div style={{ opacity: 0.8 }}>
-              <h3 style={{ color: 'white', margin: 0 }}>2,350 kg</h3>
-              <p>Makanan Diselamatkan</p>
-            </div>
-            <div style={{ opacity: 0.8 }}>
-              <h3 style={{ color: 'white', margin: 0 }}>48</h3>
-              <p>Café Bergabung</p>
-            </div>
-            <div style={{ opacity: 0.8 }}>
-              <h3 style={{ color: 'white', margin: 0 }}>125</h3>
-              <p>Mitra Aktif</p>
-            </div>
+    <div style={{ minHeight: '100vh', display: 'flex', background: '#F8F9FA' }}>
+      {/* Left section - Branding */}
+      <div style={{ flex: 1, background: 'linear-gradient(135deg, var(--primary-color) 0%, #155e40 100%)', display: 'flex', flexDirection: 'column', padding: '40px', color: 'white', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '400px', height: '400px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
+        <div style={{ position: 'absolute', bottom: '-5%', left: '-5%', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
+        
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'white', zIndex: 1 }}>
+          <div style={{ background: 'white', color: 'var(--primary-color)', padding: '8px', borderRadius: '8px' }}>
+            <Coffee size={24} />
           </div>
+          <h2 style={{ margin: 0, fontSize: '24px' }}>IndCaffe</h2>
+        </Link>
+        
+        <div style={{ marginTop: 'auto', marginBottom: 'auto', zIndex: 1, maxWidth: '400px' }}>
+          <h1 style={{ fontSize: '42px', lineHeight: 1.2, marginBottom: '24px' }}>Selamat Datang Kembali</h1>
+          <p style={{ fontSize: '18px', opacity: 0.9, lineHeight: 1.6 }}>Lanjutkan kontribusi Anda dalam membangun ekosistem kopi berkelanjutan bersama IndCaffe.</p>
         </div>
       </div>
 
-      {/* Right Login Form Column */}
-      <div className="split-right">
-        <div style={{ maxWidth: '400px', width: '100%', margin: '0 auto' }} className="animate-fade-in">
-          <h2>Selamat Datang Kembali</h2>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>Masuk ke akun IndCaffe Anda</p>
+      {/* Right section - Login Form */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+        <div style={{ width: '100%', maxWidth: '400px' }}>
+          <h2 style={{ fontSize: '28px', color: 'var(--text-primary)', marginBottom: '8px' }}>Masuk ke Akun</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Silakan masukkan username dan password Anda</p>
           
           {error && <div style={{ padding: '12px', background: '#FFEBEE', color: '#C62828', borderRadius: '8px', marginBottom: '16px', fontSize: '13px' }}>{error}</div>}
           
@@ -102,6 +88,7 @@ const LoginPage = () => {
                 value={username} 
                 onChange={e => setUsername(e.target.value)} 
                 required 
+                disabled={isLoading}
               />
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Petunjuk: Ketik "admin" atau "mitra"</span>
             </div>
@@ -109,43 +96,34 @@ const LoginPage = () => {
             <div className="form-group">
               <label className="form-label">Password</label>
               <div style={{ position: 'relative' }}>
-                <Lock size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
                 <input 
                   type={showPassword ? "text" : "password"} 
                   className="form-input" 
                   placeholder="••••••••" 
-                  style={{ paddingLeft: '48px', paddingRight: '48px' }} 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
                   required 
+                  disabled={isLoading}
                 />
                 <button 
-                  type="button" 
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer' }}>
-                <input type="checkbox" /> Ingat Saya
-              </label>
-              <Link to="#" style={{ fontSize: '13px', color: 'var(--accent-green)' }}>Lupa Password?</Link>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px' }}>
+              <a href="#" style={{ color: 'var(--primary-color)', fontSize: '14px', textDecoration: 'none', fontWeight: '500' }}>Lupa Password?</a>
             </div>
-
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-              Masuk Sekarang
+            
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px' }} disabled={isLoading}>
+              {isLoading ? 'Memproses...' : 'Masuk Sekarang'}
             </button>
           </form>
 
-          <div style={{ display: 'flex', alignItems: 'center', margin: '32px 0' }}>
-            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-            <span style={{ padding: '0 16px', color: 'var(--text-secondary)' }}>atau</span>
-            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-          </div>
 
           <div style={{ textAlign: 'center' }}>
             <p style={{ color: 'var(--text-secondary)' }}>Belum punya akun?</p>

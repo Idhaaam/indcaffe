@@ -14,7 +14,7 @@ const InternalLayout = ({ children, title }) => {
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.clear();
-    navigate('/login');
+    window.location.href = '/';
   };
 
   const username = localStorage.getItem('username') || 'Admin';
@@ -102,7 +102,7 @@ const InternalLayout = ({ children, title }) => {
                     color: 'white', borderRadius: '4px', opacity: currentPath === '/cafe-klaim' ? 1 : 0.7
                   }}>
                     <HeartHandshake size={20} /> Pesanan Masuk 
-                    {claims && claims.length > 0 && <span className="badge" style={{ background: 'var(--accent-blue)', color: 'white', marginLeft: 'auto' }}>{claims.length}</span>}
+                    {claims && claims.filter(c => c.status === 'Menunggu').length > 0 && <span className="badge" style={{ background: 'var(--accent-blue)', color: 'white', marginLeft: 'auto' }}>{claims.filter(c => c.status === 'Menunggu').length}</span>}
                   </Link>
                 </li>
               </>
@@ -235,21 +235,45 @@ const InternalLayout = ({ children, title }) => {
                     <Package size={20} /> Keranjang
                   </Link>
                 </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/pelanggan-riwayat" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/pelanggan-riwayat' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/pelanggan-riwayat' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/pelanggan-riwayat' ? 1 : 0.7
+                  }}>
+                    <LayoutDashboard size={20} /> Riwayat Pesanan
+                  </Link>
+                </li>
               </>
             )}
 
-            {/* COMMON LINKS (Forum) */}
+            {/* COMMON LINKS (Forum & Chat) */}
             {(role === 'CAFE' || role === 'MITRA' || role === 'PELANGGAN') && (
-              <li style={{ marginBottom: '8px' }}>
-                <Link to="/community/forum" style={{ 
-                  display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                  background: currentPath === '/community/forum' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                  borderLeft: currentPath === '/community/forum' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                  color: 'white', borderRadius: '4px', opacity: currentPath === '/community/forum' ? 1 : 0.7
-                }}>
-                  <MessageCircle size={20} /> Forum Diskusi
-                </Link>
-              </li>
+              <>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link to="/community/forum" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                    background: currentPath === '/community/forum' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    borderLeft: currentPath === '/community/forum' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                    color: 'white', borderRadius: '4px', opacity: currentPath === '/community/forum' ? 1 : 0.7
+                  }}>
+                    <MessageCircle size={20} /> Forum Diskusi
+                  </Link>
+                </li>
+                {role === 'CAFE' && (
+                  <li style={{ marginBottom: '8px' }}>
+                    <Link to="/chat" style={{ 
+                      display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
+                      background: currentPath === '/chat' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                      borderLeft: currentPath === '/chat' ? '3px solid var(--accent-green)' : '3px solid transparent',
+                      color: 'white', borderRadius: '4px', opacity: currentPath === '/chat' ? 1 : 0.7
+                    }}>
+                      <MessageCircle size={20} /> Pesan
+                    </Link>
+                  </li>
+                )}
+              </>
             )}
 
             <li style={{ marginTop: 'auto', paddingTop: '24px' }}>
@@ -299,7 +323,10 @@ const InternalLayout = ({ children, title }) => {
                 </div>
               )}
             </div>
-            <Link to="/cafe-profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
+            <Link 
+              to={role === 'CAFE' ? '/cafe-profile' : role === 'MITRA' ? '/mitra-profile' : '/pelanggan-profile'} 
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+            >
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
                 <User size={16} />
               </div>

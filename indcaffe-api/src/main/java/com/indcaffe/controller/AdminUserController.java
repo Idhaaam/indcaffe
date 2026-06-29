@@ -42,6 +42,16 @@ public class AdminUserController {
         return ResponseEntity.ok(adminUserService.updateUser(id, request));
     }
 
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<UserResponseDTO> approveUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminUserService.approveUser(id));
+    }
+
+    @PutMapping("/{id}/toggle-status")
+    public ResponseEntity<UserResponseDTO> toggleUserStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(adminUserService.toggleUserStatus(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         adminUserService.deleteUser(id);

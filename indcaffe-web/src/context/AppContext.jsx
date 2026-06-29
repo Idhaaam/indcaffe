@@ -104,22 +104,34 @@ export const AppProvider = ({ children }) => {
 
   const fetchClaims = async () => {
     try {
-      const cafeId = localStorage.getItem('cafeId');
-      if (cafeId && cafeId !== 'null') {
-         const res = await api.get(`/transactions/surplus/claims/cafe/${cafeId}`);
-         const mapped = res.data.map(c => ({
-           id: c.id,
-           productId: c.product?.id,
-           productName: c.product?.name,
-           quantity: c.quantity,
-           mitra: c.claimedBy?.name || 'Panti Asuhan Kasih',
-           delivery: 'Jemput Sendiri',
-           status: c.status === 'DIKLAIM' ? 'Menunggu' : (c.status === 'SELESAI' ? 'Selesai' : 'Kadaluarsa'),
-           date: new Date(c.claimDate || new Date()).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-           price: c.price || 0,
-           totalPrice: (c.price || 0) * c.quantity
-         }));
-         setClaims(mapped);
+      const role = localStorage.getItem('role');
+      let res;
+      if (role === 'CAFE') {
+        res = await api.get('/orders/cafe');
+      } else if (role === 'MITRA' || role === 'PELANGGAN') {
+        res = await api.get('/orders/my-orders');
+      }
+
+      if (res && res.data) {
+        const mapped = res.data.map(c => {
+          let status = c.status;
+          if (c.status === 'PENDING') status = 'Menunggu';
+          else if (c.status === 'PAID') status = 'Disetujui';
+          else if (c.status === 'COMPLETED') status = 'Selesai';
+          else if (c.status === 'CANCELLED' || c.status === 'REJECTED') status = 'Ditolak';
+
+          return {
+            id: c.id,
+            productId: c.items?.[0]?.product?.id,
+            productName: c.items?.map(i => i.productName).join(', ') || 'Pesanan',
+            quantity: c.items?.reduce((sum, i) => sum + i.quantity, 0) || 0,
+            buyerName: c.buyerName || 'Pembeli',
+            status: status,
+            date: new Date(c.orderDate || new Date()).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+            totalPrice: c.totalAmount || 0
+          };
+        });
+        setClaims(mapped);
       }
     } catch (err) {
       console.error("Failed to fetch claims:", err);

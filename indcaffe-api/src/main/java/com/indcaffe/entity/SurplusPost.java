@@ -59,7 +59,7 @@ public class SurplusPost {
     private String catatan;
 
     @Version
-    private Long version;
+    private Integer version;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

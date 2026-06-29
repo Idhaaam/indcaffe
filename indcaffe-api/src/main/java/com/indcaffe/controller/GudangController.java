@@ -73,13 +73,11 @@ public class GudangController {
     }
 
     @GetMapping("/api/warehouse/inventory")
-    @PreAuthorize("permitAll()") // Or whatever authorization is required. Assuming inherited or permitAll. We'll stick to class level preauth if present. But wait, class level is ADMIN_GUDANG. So it's fine.
     public ResponseEntity<List<com.indcaffe.entity.WarehouseStock>> getAllStock() {
         return ResponseEntity.ok(warehouseStockRepository.findAll());
     }
 
     @PostMapping("/api/warehouse/inventory")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<?> recordMovement(@RequestBody MovementRequestDTO request) {
         if (request.getProductId() == null || request.getQuantity() == null || request.getType() == null) {
             return ResponseEntity.badRequest().body("ProductId, quantity, and type are required");

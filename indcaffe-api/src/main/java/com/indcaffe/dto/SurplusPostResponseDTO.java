@@ -9,6 +9,8 @@ public record SurplusPostResponseDTO(
     String productName,
     Long cafeId,
     String cafeName,
+    Long cafeUserId,
+    String cafeUsername,
     Double quantity,
     LocalDateTime expiryDate,
     SurplusStatus status,
@@ -18,5 +20,5 @@ public record SurplusPostResponseDTO(
     Long approvedById,
     String approvedByUsername,
     LocalDateTime approvedAt,
-    Long version
+    Integer version
 ) {}

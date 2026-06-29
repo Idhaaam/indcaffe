@@ -7,5 +7,7 @@ public record UserResponseDTO(
     Long id,
     String username,
     Role role,
+    Boolean isActive,
+    Boolean isApproved,
     LocalDateTime createdAt
 ) {}

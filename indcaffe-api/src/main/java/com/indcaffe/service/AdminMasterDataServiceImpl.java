@@ -221,6 +221,8 @@ public class AdminMasterDataServiceImpl implements AdminMasterDataService {
                 p.getSupplier() != null ? p.getSupplier().getId() : null,
                 p.getSupplier() != null ? p.getSupplier().getName() : null,
                 p.getCafe().getId(), p.getCafe().getName(),
+                p.getCafe().getUser() != null ? p.getCafe().getUser().getId() : null,
+                p.getCafe().getUser() != null ? p.getCafe().getUser().getUsername() : null,
                 p.getUnit(), p.getCurrentStock(), p.getExpiryDate(), p.getVersion()
         );
     }

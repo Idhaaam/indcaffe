@@ -57,6 +57,10 @@ public class TransactionService {
         return surplusRepo.findByCafeId(cafeId);
     }
 
+    public List<SurplusPost> getSurplusClaimsByMitra(Long mitraId) {
+        return surplusRepo.findByClaimedById(mitraId);
+    }
+
     @Transactional
     public SurplusPost createSurplus(SurplusPost surplus) {
         Cafe cafe = cafeRepository.findById(surplus.getCafe().getId()).orElseThrow(() -> new ResourceNotFoundException("Cafe tidak ditemukan"));
@@ -117,6 +121,38 @@ public class TransactionService {
     }
 
     @Transactional
+    public SurplusPost selesaikanKlaim(Long surplusPostId, Long cafeId) {
+        SurplusPost post = surplusRepo.findByIdWithPessimisticLock(surplusPostId)
+                .orElseThrow(() -> new ResourceNotFoundException("Donasi tidak ditemukan"));
+
+        if (post.getCafe() == null || !post.getCafe().getId().equals(cafeId)) {
+            throw new IllegalArgumentException("Anda tidak berhak mengupdate donasi milik cafe lain");
+        }
+        if (post.getStatus() != SurplusStatus.DIKLAIM && post.getStatus() != SurplusStatus.DIKONFIRMASI) {
+            throw new IllegalArgumentException("Donasi tidak dapat diselesaikan karena statusnya bukan DIKLAIM atau DIKONFIRMASI");
+        }
+
+        post.setStatus(SurplusStatus.SELESAI);
+        return surplusRepo.save(post);
+    }
+
+    @Transactional
+    public SurplusPost konfirmasiKlaim(Long surplusPostId, Long cafeId) {
+        SurplusPost post = surplusRepo.findByIdWithPessimisticLock(surplusPostId)
+                .orElseThrow(() -> new ResourceNotFoundException("Donasi tidak ditemukan"));
+
+        if (post.getCafe() == null || !post.getCafe().getId().equals(cafeId)) {
+            throw new IllegalArgumentException("Anda tidak berhak mengupdate donasi milik cafe lain");
+        }
+        if (post.getStatus() != SurplusStatus.DIKLAIM) {
+            throw new IllegalArgumentException("Donasi tidak dapat dikonfirmasi karena statusnya bukan DIKLAIM");
+        }
+
+        post.setStatus(SurplusStatus.DIKONFIRMASI);
+        return surplusRepo.save(post);
+    }
+
+    @Transactional
     public ClaimResponseDTO batalkanKlaim(Long surplusPostId, Long mitraId) {
         SurplusPost post = surplusRepo.findByIdWithPessimisticLock(surplusPostId)
                 .orElseThrow(() -> new ResourceNotFoundException("Donasi tidak ditemukan"));
@@ -156,3 +192,5 @@ public class TransactionService {
         );
     }
 }
+
+

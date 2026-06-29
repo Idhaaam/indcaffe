@@ -11,6 +11,8 @@ public record ProductResponseDTO(
     String supplierName,
     Long cafeId,
     String cafeName,
+    Long cafeUserId,
+    String cafeUsername,
     String unit,
     Double currentStock,
     LocalDate expiryDate,

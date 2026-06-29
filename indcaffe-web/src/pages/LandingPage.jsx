@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Coffee, Heart, Globe } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -17,6 +18,11 @@ const LandingPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>IndCaffe - Platform Keberlanjutan Kopi & Donasi Surplus</title>
+        <meta name="description" content="Bergabung dengan ekosistem kopi berkelanjutan. Beli surplus makanan dari cafe dengan harga murah, atau donasikan untuk mereka yang membutuhkan." />
+      </Helmet>
+      
       {/* Navbar */}
       <nav style={{ padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--primary-color)', color: 'white' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

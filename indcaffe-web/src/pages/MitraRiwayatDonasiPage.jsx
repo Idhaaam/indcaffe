@@ -1,18 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MitraLayout from '../components/MitraLayout';
 import { ScrollText, Utensils, HeartHandshake, Leaf } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
 import EmptyState from '../components/EmptyState';
+import api from '../api';
 
 const MitraRiwayatDonasiPage = () => {
-  const { claims } = useAppContext();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const mitraName = localStorage.getItem('name') || 'Panti Asuhan Kasih';
 
-  // Kalkulasi sederhana dari data claims
-  const totalPesanan = claims.length;
-  // Anggap 1 pesanan = 5 kg makanan untuk dummy perhitungan dampak
-  const totalMakanan = totalPesanan * 5; 
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/orders/my-orders');
+      setOrders(response.data || []);
+    } catch (err) {
+      console.error('Failed to fetch history', err);
+      setError('Gagal memuat riwayat pesanan');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Kalkulasi sederhana dari data asli
+  const totalPesanan = orders.length;
+  // Menghitung total porsi berdasarkan qty pesanan
+  const totalQty = orders.reduce((acc, curr) => {
+    const orderQty = curr.items && curr.items.length > 0 ? curr.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+    return acc + orderQty;
+  }, 0);
+  
+  const totalMakanan = totalQty * 2; // Asumsi 1 porsi = 2kg
   const totalCo2 = totalMakanan * 2.5;
+
+  const getUiStatus = (status) => {
+    if (status === 'PENDING') return 'Menunggu';
+    if (status === 'APPROVED') return 'Disetujui';
+    if (status === 'COMPLETED') return 'Selesai';
+    if (status === 'CANCELLED' || status === 'REJECTED') return 'Ditolak';
+    return status;
+  };
 
   return (
     <MitraLayout title="Mitra / Riwayat & Dampak Saya">
@@ -31,7 +64,7 @@ const MitraRiwayatDonasiPage = () => {
             <h2 style={{ color: 'white', fontSize: '36px', margin: 0 }}>{totalMakanan} kg</h2>
           </div>
           <h4 style={{ margin: '0 0 8px 0', opacity: 0.9 }}>Total Makanan Diterima</h4>
-          <span style={{ fontSize: '13px', background: 'rgba(255,255,255,0.2)', padding: '4px 8px', borderRadius: '4px' }}>Setara {totalMakanan * 3} porsi makan</span>
+          <span style={{ fontSize: '13px', background: 'rgba(255,255,255,0.2)', padding: '4px 8px', borderRadius: '4px' }}>Berdasarkan {totalQty} produk</span>
         </div>
         
         <div className="card glass-card" style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white' }}>
@@ -48,7 +81,7 @@ const MitraRiwayatDonasiPage = () => {
             <HeartHandshake size={24} style={{ opacity: 0.8 }} />
             <h2 style={{ color: 'white', fontSize: '36px', margin: 0 }}>{totalPesanan} kali</h2>
           </div>
-          <h4 style={{ margin: '0 0 8px 0', opacity: 0.9 }}>Total Pesanan Berhasil</h4>
+          <h4 style={{ margin: '0 0 8px 0', opacity: 0.9 }}>Total Pesanan Dibuat</h4>
           <span style={{ fontSize: '13px', background: 'rgba(255,255,255,0.2)', padding: '4px 8px', borderRadius: '4px' }}>Terima kasih atas partisipasi Anda</span>
         </div>
       </div>
@@ -74,7 +107,11 @@ const MitraRiwayatDonasiPage = () => {
           </div>
         </div>
         
-        {claims.length === 0 ? (
+        {loading ? (
+          <p style={{ padding: '24px' }}>Memuat riwayat...</p>
+        ) : error ? (
+          <p style={{ padding: '24px', color: 'red' }}>{error}</p>
+        ) : orders.length === 0 ? (
           <EmptyState title="Belum Ada Riwayat" message="Anda belum pernah melakukan pesanan produk surplus." />
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
@@ -83,22 +120,31 @@ const MitraRiwayatDonasiPage = () => {
                 <th style={{ padding: '16px 24px', fontWeight: '600' }}>Tanggal</th>
                 <th style={{ padding: '16px 24px', fontWeight: '600' }}>Café</th>
                 <th style={{ padding: '16px 24px', fontWeight: '600' }}>Produk</th>
-                <th style={{ padding: '16px 24px', fontWeight: '600' }}>Jumlah</th>
+                <th style={{ padding: '16px 24px', fontWeight: '600' }}>Jumlah Item</th>
+                <th style={{ padding: '16px 24px', fontWeight: '600' }}>Total Harga</th>
                 <th style={{ padding: '16px 24px', fontWeight: '600' }}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {claims.map(claim => (
-                <tr key={claim.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td style={{ padding: '16px 24px' }}>{claim.date}</td>
-                  <td style={{ padding: '16px 24px', fontWeight: '500' }}>{claim.cafeName || 'IndCaffe Network'}</td>
-                  <td style={{ padding: '16px 24px' }}>{claim.productName}</td>
-                  <td style={{ padding: '16px 24px', fontWeight: 'bold', color: 'var(--accent-green)' }}>{claim.quantity}</td>
-                  <td style={{ padding: '16px 24px' }}>
-                    <span className={`badge ${claim.status === 'Selesai' ? 'badge-blue' : claim.status === 'Menunggu' ? 'badge-orange' : 'badge-green'}`}>{claim.status}</span>
-                  </td>
-                </tr>
-              ))}
+              {orders.map(order => {
+                const uiStatus = getUiStatus(order.status);
+                const orderDate = order.orderDate ? new Date(order.orderDate).toLocaleDateString('id-ID') : '-';
+                const productName = order.items && order.items.length > 0 ? order.items.map(i => i.productName).join(', ') : 'Pesanan';
+                const orderQty = order.items && order.items.length > 0 ? order.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+
+                return (
+                  <tr key={order.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    <td style={{ padding: '16px 24px' }}>{orderDate}</td>
+                    <td style={{ padding: '16px 24px', fontWeight: '500' }}>{order.cafeName || 'IndCaffe Network'}</td>
+                    <td style={{ padding: '16px 24px' }}>{productName}</td>
+                    <td style={{ padding: '16px 24px', fontWeight: 'bold', color: 'var(--accent-green)' }}>{orderQty}</td>
+                    <td style={{ padding: '16px 24px', fontWeight: 'bold', color: 'var(--accent-orange)' }}>Rp {order.totalAmount?.toLocaleString('id-ID')}</td>
+                    <td style={{ padding: '16px 24px' }}>
+                      <span className={`badge ${uiStatus === 'Selesai' ? 'badge-blue' : uiStatus === 'Menunggu' ? 'badge-orange' : uiStatus === 'Ditolak' ? 'badge-red' : 'badge-green'}`}>{uiStatus}</span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

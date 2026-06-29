@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Coffee, User, Lock, MapPin, Store } from 'lucide-react';
+import api from '../api';
 
 const RegisterCafePage = () => {
   const [formData, setFormData] = useState({
@@ -8,23 +9,21 @@ const RegisterCafePage = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(''); setSuccess('');
+    setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:8081/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, type: 'CAFE' })
-      });
-      const data = await res.text();
-      if (!res.ok) throw new Error(data || 'Gagal mendaftar');
+      await api.post('/auth/register', { ...formData, type: 'CAFE' });
       setSuccess('Pendaftaran berhasil! Silakan login.');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || 'Gagal mendaftar');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,7 +67,9 @@ const RegisterCafePage = () => {
               <label className="form-label">Alamat Lengkap</label>
               <textarea className="form-input" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} required rows={3}></textarea>
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>Daftar Sekarang</button>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', marginTop: '16px' }} disabled={isLoading}>
+              {isLoading ? 'Memproses...' : 'Daftar Sebagai Café'}
+            </button>
           </form>
 
           <div style={{ textAlign: 'center', marginTop: '24px' }}>

@@ -15,6 +15,7 @@ const StokMasukPage = () => {
     quantity: '',
     notes: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -34,6 +35,7 @@ const StokMasukPage = () => {
 
   const handleAddStock = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await api.post('/transactions/', {
         product: { id: parseInt(formData.productId) },
@@ -48,6 +50,8 @@ const StokMasukPage = () => {
     } catch (err) {
       console.error(err);
       alert('Gagal menambah stok');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,7 +146,9 @@ const StokMasukPage = () => {
                 <label className="form-label">Catatan (Opsional)</label>
                 <textarea className="form-input" value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} placeholder="Misal: Stok dari supplier X"></textarea>
               </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}>Simpan Stok</button>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }} disabled={isLoading}>
+                {isLoading ? 'Menyimpan...' : 'Simpan Stok'}
+              </button>
             </form>
           </div>
         </div>

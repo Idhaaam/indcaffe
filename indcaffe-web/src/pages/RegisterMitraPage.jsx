@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { HeartHandshake, User, Lock, MapPin, Building } from 'lucide-react';
+import api from '../api';
 
 const RegisterMitraPage = () => {
   const [formData, setFormData] = useState({
@@ -8,23 +9,21 @@ const RegisterMitraPage = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(''); setSuccess('');
+    setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:8081/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, type: 'MITRA' })
-      });
-      const data = await res.text();
-      if (!res.ok) throw new Error(data || 'Gagal mendaftar');
+      await api.post('/auth/register', { ...formData, type: 'MITRA' });
       setSuccess('Pendaftaran berhasil! Silakan login.');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || 'Gagal mendaftar');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +73,9 @@ const RegisterMitraPage = () => {
               <label className="form-label">Kota</label>
               <input type="text" className="form-input" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} required />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px', background: '#1976D2', borderColor: '#1976D2' }}>Daftar Sebagai Mitra</button>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', marginTop: '16px' }} disabled={isLoading}>
+              {isLoading ? 'Memproses...' : 'Daftar Sebagai Mitra'}
+            </button>
           </form>
 
           <div style={{ textAlign: 'center', marginTop: '24px' }}>

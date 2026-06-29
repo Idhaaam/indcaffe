@@ -24,7 +24,7 @@ public interface SurplusPostRepository extends JpaRepository<SurplusPost, Long> 
     @org.springframework.data.jpa.repository.Query("SELECT s FROM SurplusPost s JOIN FETCH s.product JOIN FETCH s.cafe LEFT JOIN FETCH s.claimedBy LEFT JOIN FETCH s.approvedBy")
     org.springframework.data.domain.Page<SurplusPost> findAllWithFetch(org.springframework.data.domain.Pageable pageable);
 
-    @org.springframework.data.jpa.repository.Query("SELECT s FROM SurplusPost s JOIN FETCH s.product p JOIN FETCH p.category JOIN FETCH s.cafe LEFT JOIN FETCH s.claimedBy LEFT JOIN FETCH s.approvedBy")
+    @org.springframework.data.jpa.repository.Query("SELECT s FROM SurplusPost s JOIN FETCH s.product p JOIN FETCH p.category JOIN FETCH s.cafe c JOIN FETCH c.user LEFT JOIN FETCH s.claimedBy LEFT JOIN FETCH s.approvedBy")
     List<SurplusPost> findAllWithEagerFetch();
 
     @org.springframework.data.jpa.repository.Query("SELECT SUM(s.quantity) FROM SurplusPost s WHERE s.status = :status")

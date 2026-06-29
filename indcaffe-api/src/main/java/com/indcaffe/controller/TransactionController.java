@@ -28,6 +28,7 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final UserRepository userRepository;
     private final MitraRepository mitraRepository;
+    private final com.indcaffe.repository.CafeRepository cafeRepository;
 
     private Long getCurrentMitraId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -38,6 +39,17 @@ public class TransactionController {
         Mitra mitra = mitraRepository.findByUserId(currentUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Mitra profile tidak ditemukan untuk user ini"));
         return mitra.getId();
+    }
+
+    private Long getCurrentCafeId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User tidak ditemukan"));
+        
+        com.indcaffe.entity.Cafe cafe = cafeRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cafe profile tidak ditemukan untuk user ini"));
+        return cafe.getId();
     }
 
     @GetMapping("/cafe/{cafeId}")
@@ -77,6 +89,28 @@ public class TransactionController {
             .filter(p -> "DIKLAIM".equals(p.getStatus().name()) || "SELESAI".equals(p.getStatus().name()) || "DIKONFIRMASI".equals(p.getStatus().name()))
             .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(claims);
+    }
+
+    @GetMapping("/surplus/claims/mitra")
+    @PreAuthorize("hasAuthority('ROLE_MITRA')")
+    public ResponseEntity<?> getSurplusClaimsByMitra() {
+        Long mitraId = getCurrentMitraId();
+        java.util.List<SurplusPost> claims = transactionService.getSurplusClaimsByMitra(mitraId);
+        return ResponseEntity.ok(claims);
+    }
+
+    @PostMapping("/surplus/{id}/pickup")
+    @PreAuthorize("hasAuthority('ROLE_CAFE')")
+    public ResponseEntity<?> pickupDonasi(@PathVariable Long id) {
+        Long cafeId = getCurrentCafeId();
+        return ResponseEntity.ok(transactionService.selesaikanKlaim(id, cafeId));
+    }
+
+    @PostMapping("/surplus/{id}/konfirmasi")
+    @PreAuthorize("hasAuthority('ROLE_CAFE')")
+    public ResponseEntity<?> konfirmasiDonasi(@PathVariable Long id) {
+        Long cafeId = getCurrentCafeId();
+        return ResponseEntity.ok(transactionService.konfirmasiKlaim(id, cafeId));
     }
 
     @PostMapping("/pelanggan/klaim")

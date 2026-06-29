@@ -10,4 +10,6 @@ public interface AdminUserService {
     UserResponseDTO createUser(UserRequestDTO request);
     UserResponseDTO updateUser(Long id, UserRequestDTO request);
     void deleteUser(Long id);
+    UserResponseDTO approveUser(Long id);
+    UserResponseDTO toggleUserStatus(Long id);
 }

@@ -261,13 +261,13 @@ const InternalLayout = ({ children, title }) => {
                     <MessageCircle size={20} /> Forum Diskusi
                   </Link>
                 </li>
-                {role === 'CAFE' && (
+                {(role === 'CAFE' || role === 'MITRA' || role === 'PELANGGAN') && (
                   <li style={{ marginBottom: '8px' }}>
-                    <Link to="/chat" style={{ 
+                    <Link to={role === 'CAFE' ? '/chat' : role === 'MITRA' ? '/mitra-chat' : '/pelanggan-chat'} style={{ 
                       display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', 
-                      background: currentPath === '/chat' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                      borderLeft: currentPath === '/chat' ? '3px solid var(--accent-green)' : '3px solid transparent',
-                      color: 'white', borderRadius: '4px', opacity: currentPath === '/chat' ? 1 : 0.7
+                      background: ['/chat', '/mitra-chat', '/pelanggan-chat'].includes(currentPath) ? 'rgba(255,255,255,0.1)' : 'transparent',
+                      borderLeft: ['/chat', '/mitra-chat', '/pelanggan-chat'].includes(currentPath) ? '3px solid var(--accent-green)' : '3px solid transparent',
+                      color: 'white', borderRadius: '4px', opacity: ['/chat', '/mitra-chat', '/pelanggan-chat'].includes(currentPath) ? 1 : 0.7
                     }}>
                       <MessageCircle size={20} /> Pesan
                     </Link>
